@@ -1,0 +1,40 @@
+import React, { useState } from 'react'
+import ClickOutListener from 'react-onclickout'
+
+const Cell = (props) => {
+
+    const { cellData: { value, rowIndex, colIndex }, setCellValueHandler } = props
+    const [editModeState, setEditMode] = useState(false)
+    const [inputValue, setInputValue] = useState("")
+
+    const setEditModeOnHandler = () => {
+        if (!editModeState) setEditMode(true)
+    }
+    const inputChangeHandler = (event) => setInputValue(event.target.value)
+
+    // Cell data in table should be updated only when cell editMode changes from TRUE to FALSE
+    const setEditModeOffHandler = () => {
+        if (editModeState) {
+            setEditMode(false)
+            setCellValueHandler({ rowIndex, colIndex, value: inputValue })
+        }
+    }
+
+    return (
+        <ClickOutListener onClickOut={setEditModeOffHandler}>
+            <td
+                id={`cell-${rowIndex}-${colIndex}`} 
+                className={editModeState ? "editMode" : value.length === 0 ? "empty" : "filled"} // Changing css classes depending on cell state
+                onClick={setEditModeOnHandler}
+            >
+                {editModeState ?
+                    <input type="text" onChange={inputChangeHandler} value={inputValue} />
+                        :
+                    value
+                }
+            </td>
+        </ClickOutListener>
+    )
+}
+
+export default Cell

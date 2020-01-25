@@ -1,7 +1,7 @@
-import React, { useState, Fragment, useEffect } from 'react'
-import TableView from "./Components/TableView"
-import Toolbar from "./Components/Toolbar"
-import './App.css'
+import React, { useState, Fragment, useEffect } from 'react';
+import TableView from './Components/TableView';
+import Toolbar from './Components/Toolbar';
+import './App.css';
 
 const App = () => {
 
@@ -20,31 +20,32 @@ const App = () => {
     // List of rows
     // Each row consists of array of cells (2D Array)
     rows: []
-  })
+  });
 
   const generateTableHandler = ({ rowsAmount, colsAmount }) => {
     // If table limits exceeded, show alert and do not generate table
+    // Alert modals are temporary, until work with UI will start
     if (rowsAmount < 1 || rowsAmount > tableState.rowsMax) {
-      alert(`Rows range exceeded: 1-${tableState.rowsMax}`)
-      return
+      alert(`Rows range exceeded: 1-${tableState.rowsMax}`);
+      return;
     }
 
     if (colsAmount < 1 || colsAmount > tableState.colsMax) {
-      alert(`Columns range exceeded: 1-${tableState.colsMax}`)
-      return
+      alert(`Columns range exceeded: 1-${tableState.colsMax}`);
+      return;
     }
 
-    let rows = []
+    let rows = [];
 
     // Saving cell data to 2D Array
     for (let i = 0; i < rowsAmount; i++) {
-      rows.push([])
+      rows.push([]);
       for (let j = 0; j < colsAmount; j++) {
         rows[i].push({
           rowIndex: i,
           colIndex: j,
-          value: "",
-        })    
+          value: '',
+        });
       }
     }
 
@@ -53,13 +54,13 @@ const App = () => {
       rowsAmount,
       colsAmount,
       rows
-    })
+    });
   }
 
   useEffect(() => {
     // Generating 5x5 table by default
-    generateTableHandler({ rowsAmount: 5, colsAmount: 5 })
-  }, [])
+    generateTableHandler({ rowsAmount: 5, colsAmount: 5 });
+  }, []);
 
   const setCellValueHandler = ({ rowIndex, colIndex, value }) => {
     let rows = tableState.rows
@@ -67,7 +68,7 @@ const App = () => {
     setTable({
       ...tableState,
       rows
-    })
+    });
   }
 
   // For debug purposes
@@ -84,7 +85,7 @@ const App = () => {
           rowsMax: tableState.rowsMax
         }}
       />
-      <div className="appContainer">
+      <div className='appContainer'>
         <h3>Table Preview:</h3>
         <TableView
           data={tableState}
@@ -92,7 +93,7 @@ const App = () => {
         />
       </div>
     </Fragment>
-  )
+  );
 }
 
-export default App
+export default App;

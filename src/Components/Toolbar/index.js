@@ -1,14 +1,16 @@
-import React from 'react'
-import GenerateTableForm from './Components/GenerateTableForm'
+import React from 'react';
+import GenerateTableForm from './Components/GenerateTableForm';
+import './Toolbar.css';
 
-const Toolbar = (props) => {
-    const { data } = props
+const Toolbar = props => {
+  
+  const { data } = props;
 
-    return (
-        <div className="toolbar">
-            <GenerateTableForm data={data} />
-        </div>
-    )
+  return (
+    <div className='toolbar'>
+      <GenerateTableForm data={data} />
+    </div>
+  );
 }
 
-export default Toolbar
+export default Toolbar;

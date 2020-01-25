@@ -1,38 +1,7 @@
 .appContainer {
-    margin: 10px;
+  margin: 10px;
 }
 
-table, tr, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
-
-td, th {
-    cursor: pointer;
-}
-
-td:hover, th:hover {
-    background-color: rgba(255, 153, 0, .25);
-}
-
-td.empty {
-    padding: 14px 32px;
-}
-
-td.filled {
-    padding: 8px 14px;
-}
-
-td.selected {
-    background-color: rgba(255, 153, 0, .25);
-}
-
-td.editMode {
-    padding: 8px 14px;
-    background-color: rgba(255, 153, 0, .5);
-}
-
-.toolbar {
-    background-color: #cccccc;
-    padding: 5px;
+label, input, button {
+  margin: 5px;
 }

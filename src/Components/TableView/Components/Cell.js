@@ -8,12 +8,17 @@ const Cell = props => {
   const [editModeState, setEditMode] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
-  const setEditModeOnHandler = () => {
-    if (!editModeState) setEditMode(true);
-  }
   const inputChangeHandler = event => setInputValue(event.target.value);
 
   // Cell data in table should be updated only when cell editMode changes from TRUE to FALSE
+  const setEditModeOnHandler = () => {
+    if (!editModeState) {
+      setEditMode(true);
+      // If table is not new, we need to pass cell value to input
+      setInputValue(value);
+    }
+  }
+
   const setEditModeOffHandler = () => {
     if (editModeState) {
       setEditMode(false);

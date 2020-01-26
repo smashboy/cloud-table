@@ -8,8 +8,8 @@ const GenerateTableForm = props => {
   // because we don't use inputs data outside this component
   // if data is not valid
   const [inputState, setInput] = useState({
-    rowsInput: 1,
-    colsInput: 1
+    rowsInput: 5,
+    colsInput: 5
   });
 
   const inputChangeHandler = event => {

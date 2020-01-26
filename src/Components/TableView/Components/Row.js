@@ -3,7 +3,7 @@ import Cell from './Cell';
 
 const Row = props => {
   
-  const { cells, setCellValueHandler } = props;
+  const { cells } = props;
 
   return (
     <tr>
@@ -11,7 +11,6 @@ const Row = props => {
         <Cell 
           key={i} 
           cellData={cell}
-          setCellValueHandler={setCellValueHandler}
         />
       )}
     </tr>

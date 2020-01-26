@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import generateTableAction from '../../../redux/Actions/TableActions/generateTableAction';
+import { 
+  generateTableLoading, 
+  // generateTableColsMaxError, 
+  // generateTableRowsMaxError 
+} from '../../../redux/keys';
 
 const GenerateTableForm = props => {
 
-  const { data: { generateTableHandler, colsMax, rowsMax } } = props;
+  const { limits: { colsMax, rowsMax }, loadingState, generateTableAction } = props;
 
   // For inputs values we don't need redux, 
   // because we don't use inputs data outside this component
@@ -23,33 +30,48 @@ const GenerateTableForm = props => {
   return (
     <form noValidate>
       <label>Rows{`(1-${rowsMax})`}:</label>
-        <input
-          id='rowsInput'
-          type='number'
-          value={inputState.rowsInput}
-          onChange={inputChangeHandler} 
-        />
+      <input
+        id='rowsInput'
+        type='number'
+        value={inputState.rowsInput}
+        onChange={inputChangeHandler} 
+      />
       <label>Columns{`(1-${colsMax})`}:</label>
-        <input
-          id='colsInput'
-          type='number' 
-          value={inputState.colsInput}
-          onChange={inputChangeHandler} 
-        />
+      <input
+        id='colsInput'
+        type='number' 
+        value={inputState.colsInput}
+        onChange={inputChangeHandler} 
+      />
       <button 
         type='submit'
         className='generateTableBtn'
         onClick={e => {
         // Prevent page from reloading on form submit
-        e.preventDefault()
+        e.preventDefault();
         // Removing unnecessary zeroes before generating table
-        generateTableHandler({
+        generateTableAction({
           rowsAmount: parseInt(inputState.rowsInput.toString().replace(/^0+/, ''), 10),
           colsAmount: parseInt(inputState.colsInput.toString().replace(/^0+/, ''), 10)
-        })
-      }}>Generate Table</button>
+        });
+      }}>
+        {loadingState.includes(generateTableLoading) ? "Genetaring..." : "Generate Table"}
+      </button>
     </form>
   );
 }
 
-export default GenerateTableForm;
+const mapStateToProps = state => ({
+  limits: {
+    rowsMax: state.table.rowsMax,
+    colsMax: state.table.colsMax
+  },
+  loadingState: state.ui.loading,
+  errorsState: state.ui.errors
+});
+
+const mapActionsToProps = {
+  generateTableAction
+};
+
+export default connect(mapStateToProps, mapActionsToProps)(GenerateTableForm);

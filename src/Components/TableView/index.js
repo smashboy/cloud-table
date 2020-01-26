@@ -1,24 +1,35 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
 import Row from './Components/Row';
 import './TableView.css';
+import { generateTableLoading } from '../../redux/keys';
 
 const TableView = props => {
 
-  const { data: { rows }, setCellValueHandler } = props;
+  const { data, loadingState } = props;
 
   return (
-    <table>
-      <tbody>
-        {rows.map((row, i) => 
-          <Row 
-            key={i} 
-            cells={row}
-            setCellValueHandler={setCellValueHandler}
-          />
-        )}
-      </tbody>
-    </table>
+    <Fragment>
+      {loadingState.includes(generateTableLoading) ?
+        <h3>Generating table...</h3>
+          :
+        <table>
+          <tbody>
+            {data.map((row, i) => 
+              <Row 
+                key={i} 
+                cells={row}
+              />
+            )}
+          </tbody>
+        </table>
+      }
+    </Fragment>
   );
 }
 
-export default TableView;
+const mapStateToProps = state => ({
+  loadingState: state.ui.loading
+});
+
+export default connect(mapStateToProps)(TableView);

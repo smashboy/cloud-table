@@ -2,13 +2,10 @@ import React from 'react';
 import GenerateTableForm from './Components/GenerateTableForm';
 import './Toolbar.css';
 
-const Toolbar = props => {
-  
-  const { data } = props;
-
+const Toolbar = () => {
   return (
     <div className='toolbar'>
-      <GenerateTableForm data={data} />
+      <GenerateTableForm />
     </div>
   );
 }

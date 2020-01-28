@@ -1,5 +1,6 @@
 import { 
-  SET_GENERATED_TABLE, SET_CELL_VALUE
+  SET_GENERATED_TABLE, 
+  SET_CELL_VALUE, CLEAR_ALL_CELLS
 } from '../constants';
 
 const initialState = {
@@ -21,7 +22,8 @@ const initialState = {
 export default (state = initialState, { type, payload }) => {
   switch (type) {
     case SET_GENERATED_TABLE:
-      return {...state, rows: payload};
+      const { rowsAmount, colsAmount, rows } = payload;
+      return { ...state, rows, rowsAmount, colsAmount };
     case SET_CELL_VALUE:
       return {
         ...state,
@@ -31,6 +33,13 @@ export default (state = initialState, { type, payload }) => {
           })
         })
       };
+    case CLEAR_ALL_CELLS:
+      return {
+        ...state,
+        rows: state.rows.map(row => 
+          row.map(cell => ({ ...cell, value: '' }))
+        )
+      }
     default:
       return state;
   }

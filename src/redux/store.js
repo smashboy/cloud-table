@@ -3,7 +3,7 @@ import thunk from 'redux-thunk'
 import environment from '../utils/environment';
 
 import tableReducer from './reducers/tableReducer';
-import UIReducer from './reducers/uiReducer';
+import uiReducer from './reducers/uiReducer';
 
 const initialState = {};
 
@@ -11,7 +11,7 @@ const middleware = [thunk];
 
 const reducers = combineReducers({
   table: tableReducer,
-  ui: UIReducer
+  ui: uiReducer
 });
 
 const store = createStore(

@@ -2,3 +2,19 @@
   background-color: #cccccc;
   padding: 5px;
 }
+
+.import-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: initial;
+}
+
+.import-btn-wrapper input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+  max-width: 100%;
+  margin: 0;
+}

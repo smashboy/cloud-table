@@ -1,6 +1,6 @@
 import { 
   SET_GENERATED_TABLE, SET_CELL_VALUE
-} from '../types/tableTypes';
+} from '../constants';
 
 const initialState = {
 

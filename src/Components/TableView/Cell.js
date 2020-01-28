@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import ClickOutListener from 'react-onclickout';
-import setCellValueAction from '../../../redux/Actions/TableActions/setCellValueAction';
-import './Css/Cell.css';
+import setCellValueAction from '../../redux/actions/tableActions/setCellValueAction';
 
 const Cell = props => {
 
@@ -24,7 +23,7 @@ const Cell = props => {
   const setEditModeOffHandler = () => {
     if (editModeState) {
       setEditMode(false);
-      setCellValueAction({ rowIndex, colIndex, value: inputValue });
+      if (inputValue !== value) setCellValueAction({ rowIndex, colIndex, value: inputValue });
     }
   }
 

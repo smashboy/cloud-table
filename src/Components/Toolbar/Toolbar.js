@@ -1,5 +1,5 @@
 import React from 'react';
-import GenerateTableForm from './Components/GenerateTableForm';
+import GenerateTableForm from './GenerateTableForm';
 import './Toolbar.css';
 
 const Toolbar = () => {

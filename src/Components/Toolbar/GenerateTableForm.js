@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import generateTableAction from '../../../redux/Actions/TableActions/generateTableAction';
+import generateTableAction from '../../redux/actions/tableActions/generateTableAction';
 import { 
   generateTableLoading, 
   // generateTableColsMaxError, 
   // generateTableRowsMaxError 
-} from '../../../redux/keys';
+} from '../../redux/constants';
 
 const GenerateTableForm = props => {
 
@@ -19,6 +19,8 @@ const GenerateTableForm = props => {
     colsInput: 5
   });
 
+  const { rowsInput, colsInput } = inputState;
+
   const inputChangeHandler = event => {
     // If user is dum-dum and enters float number
     setInput({
@@ -29,18 +31,18 @@ const GenerateTableForm = props => {
 
   return (
     <form noValidate>
-      <label>Rows{`(1-${rowsMax})`}:</label>
+      <label>Rows {`(1-${rowsMax})`}:</label>
       <input
         id='rowsInput'
         type='number'
-        value={inputState.rowsInput}
+        value={rowsInput}
         onChange={inputChangeHandler} 
       />
-      <label>Columns{`(1-${colsMax})`}:</label>
+      <label>Columns {`(1-${colsMax})`}:</label>
       <input
         id='colsInput'
         type='number' 
-        value={inputState.colsInput}
+        value={colsInput}
         onChange={inputChangeHandler} 
       />
       <button 
@@ -51,11 +53,11 @@ const GenerateTableForm = props => {
         e.preventDefault();
         // Removing unnecessary zeroes before generating table
         generateTableAction({
-          rowsAmount: parseInt(inputState.rowsInput.toString().replace(/^0+/, ''), 10),
-          colsAmount: parseInt(inputState.colsInput.toString().replace(/^0+/, ''), 10)
+          rowsAmount: parseInt(rowsInput.toString().replace(/^0+/, ''), 10),
+          colsAmount: parseInt(colsInput.toString().replace(/^0+/, ''), 10)
         });
       }}>
-        {loadingState.includes(generateTableLoading) ? "Genetaring..." : "Generate Table"}
+        {loadingState.includes(generateTableLoading) ? 'Genetaring...' : 'Generate Table'}
       </button>
     </form>
   );

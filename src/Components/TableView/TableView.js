@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import Row from './Components/Row';
+import Row from './Row';
 import './TableView.css';
-import { generateTableLoading } from '../../redux/keys';
+import { generateTableLoading } from '../../redux/constants';
 
 const TableView = props => {
 

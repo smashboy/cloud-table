@@ -1,4 +1,4 @@
-import { SET_CELL_VALUE } from '../../types/tableTypes';
+import { SET_CELL_VALUE } from '../../constants';
 
 const setCellValueAction = ({ ...cellData }) => dispatch => {
   dispatch({

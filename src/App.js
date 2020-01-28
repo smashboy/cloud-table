@@ -1,8 +1,8 @@
 import React, { useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
-import TableView from './Components/TableView';
-import Toolbar from './Components/Toolbar';
-import generateTableAction from './redux/Actions/TableActions/generateTableAction';
+import TableView from './Components/TableView/TableView';
+import Toolbar from './Components/Toolbar/Toolbar';
+import generateTableAction from './redux/actions/tableActions/generateTableAction';
 import './App.css';
 
 const App = props => {

@@ -8,7 +8,7 @@
 import { 
   SET_ERROR, CLEAR_ERROR,
   SET_LOADING_UI, CLEAR_LOADING_UI
-} from '../types/UITypes';
+} from '../constants';
 
 const initialState = {
 

@@ -1,15 +1,11 @@
-import { SET_GENERATED_TABLE } from '../../types/tableTypes';
-
 import { 
+  SET_GENERATED_TABLE,
   // SET_ERROR, CLEAR_ERROR,
-  SET_LOADING_UI, CLEAR_LOADING_UI
-} from '../../types/UITypes';
-
-import { 
+  SET_LOADING_UI, CLEAR_LOADING_UI,
   generateTableRowsMaxError, 
   generateTableColsMaxError,
   generateTableLoading
-} from '../../keys';
+} from '../../constants';
 
 const generateTableAction = ({ rowsAmount, colsAmount }) => (dispatch, getState) => {
 

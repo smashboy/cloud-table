@@ -3,7 +3,7 @@ import thunk from 'redux-thunk'
 import environment from '../utils/environment';
 
 import tableReducer from './reducers/tableReducer';
-import UIReducer from './reducers/UIReducer';
+import UIReducer from './reducers/uiReducer';
 
 const initialState = {};
 

@@ -27,7 +27,7 @@ const GenerateTableForm = props => {
     const parsedValue = Math.abs(parseInt(event.target.value, 10));
     setInput({
       ...inputState, 
-      [event.target.id]: parsedValue ? parsedValue : 1
+      [event.target.id]: parsedValue || 1
     });
   }
 

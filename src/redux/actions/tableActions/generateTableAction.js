@@ -7,7 +7,7 @@ import {
   generateTableLoading
 } from '../../constants';
 
-const generateTableAction = ({ rowsAmount, colsAmount }) => (dispatch, getState) => {
+const generateTableAction = ({ rowsAmount, colsAmount, data = [] }) => (dispatch, getState) => {
 
   const tableState = getState().table;
 
@@ -63,14 +63,14 @@ const generateTableAction = ({ rowsAmount, colsAmount }) => (dispatch, getState)
         rows[i].push({
           rowIndex: i,
           colIndex: j,
-          value: '',
+          value: data.length > 0 ? data[i][j].replace('Â', '') : '', // Didn't find better fix for Â symbol then just replacing it
         });
       }
     }
 
     dispatch({
       type: SET_GENERATED_TABLE,
-      payload: rows
+      payload: { rowsAmount, colsAmount, rows }
     });
 
     dispatch({

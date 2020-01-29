@@ -63,7 +63,7 @@ const generateTableAction = ({ rowsAmount, colsAmount, data = [] }) => (dispatch
         rows[i].push({
           rowIndex: i,
           colIndex: j,
-          value: data.length > 0 ? data[i][j] : '',
+          value: data.length > 0 ? data[i][j].replace('Â', '') : '', // Didn't find better fix for Â symbol then just replacing it
         });
       }
     }

@@ -22,10 +22,12 @@ const GenerateTableForm = props => {
   const { rowsInput, colsInput } = inputState;
 
   const inputChangeHandler = event => {
-    // If user is dum-dum and enters float number
+    // If user is dum-dum and enters float number or a negative number
+    // or user is trying to pass bunch of zeroes at the beginning
+    const parsedValue = Math.abs(parseInt(event.target.value, 10));
     setInput({
       ...inputState, 
-      [event.target.id]: Math.floor(event.target.value)
+      [event.target.id]: parsedValue ? parsedValue : 1
     });
   }
 
@@ -34,14 +36,14 @@ const GenerateTableForm = props => {
       <label>Rows {`(1-${rowsMax})`}:</label>
       <input
         id='rowsInput'
-        type='number'
+        type='text'
         value={rowsInput}
         onChange={inputChangeHandler} 
       />
       <label>Columns {`(1-${colsMax})`}:</label>
       <input
         id='colsInput'
-        type='number' 
+        type='text' 
         value={colsInput}
         onChange={inputChangeHandler} 
       />
@@ -53,8 +55,8 @@ const GenerateTableForm = props => {
         e.preventDefault();
         // Removing unnecessary zeroes before generating table
         generateTableAction({
-          rowsAmount: parseInt(rowsInput.toString().replace(/^0+/, ''), 10),
-          colsAmount: parseInt(colsInput.toString().replace(/^0+/, ''), 10)
+          rowsAmount: rowsInput,
+          colsAmount: colsInput
         });
       }}>
         {loadingState.includes(generateTableLoading) ? 'Genetaring...' : 'Generate Table'}

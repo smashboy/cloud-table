@@ -9,3 +9,16 @@ label, input, button {
 button {
   cursor: pointer;
 }
+
+input:focus {
+  outline: none
+}
+
+button:focus {
+  outline: none
+}
+
+textarea {
+  resize: none;
+  width: 99%;
+}

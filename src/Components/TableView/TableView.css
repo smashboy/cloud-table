@@ -1,6 +1,18 @@
-table, tr, td {
+table {
+  border: 1.5px solid #b3b3b3;
+  padding: 5px;
+  height: 80vh;
+  max-width: 100%;
+  display: block;
+  overflow: auto;
+}
+
+tr, td {
   border: 1px solid black;
-  border-collapse: collapse;
+}
+
+tbody {
+  margin: 15px;
 }
 
 td {

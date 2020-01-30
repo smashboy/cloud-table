@@ -8,7 +8,6 @@ const initialState = {
   // Table limits
   colsMax: 20,
   rowsMax: 500,
-  cellValueMaxLength: 150,
 
   // Total number of rows and columns in table:
   colsAmount: 0,

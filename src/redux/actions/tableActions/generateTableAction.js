@@ -1,58 +1,54 @@
 import { 
   SET_GENERATED_TABLE,
-  // SET_ERROR, CLEAR_ERROR,
-  SET_LOADING_UI, CLEAR_LOADING_UI,
-  generateTableRowsMaxError, 
-  generateTableColsMaxError,
-  generateTableLoading
+  SET_ERROR, CLEAR_ERROR,
+  generateTableRowsMaxError, generateTableColsMaxError,
+  importCsvError
 } from '../../constants';
 
-const generateTableAction = ({ rowsAmount, colsAmount, data = [] }) => (dispatch, getState) => {
+const generateTableAction = ({ rowsAmount, colsAmount, data = [], validateOnly = false }) => (dispatch, getState) => {
 
   const tableState = getState().table;
 
-  //  !!! Those dispatches will be uncommented, when UI is ready !!!
+  if (rowsAmount > tableState.rowsMax) {
+    dispatch({
+      type: SET_ERROR,
+      payload: {[generateTableRowsMaxError]: `Rows range exceeded: 1-${tableState.rowsMax}`}
+    });
+  } else {
+    dispatch({
+      type: CLEAR_ERROR,
+      payload: generateTableRowsMaxError
+    });
+  }
 
-  if (rowsAmount < 1 || rowsAmount > tableState.rowsMax) {
-    alert(`Rows range exceeded: 1-${tableState.rowsMax}`);
-    return;
-    // dispatch({
-    //   type: SET_ERROR,
-    //   payload: {[generateTableRowsMaxError]: `Rows range exceeded: 1-${tableState.rowsMax}`}
-    // });
-  } 
-  // else {
-  //   dispatch({
-  //     type: CLEAR_ERROR,
-  //     payload: generateTableRowsMaxError
-  //   });
-  // }
+  if (colsAmount > tableState.colsMax) {
+    dispatch({
+      type: SET_ERROR,
+      payload: {[generateTableColsMaxError]: `Columns range exceeded: 1-${tableState.colsMax}`}
+    });
+  } else {
+    dispatch({
+      type: CLEAR_ERROR,
+      payload: generateTableColsMaxError
+    });
+  }
 
-  if (colsAmount < 1 || colsAmount > tableState.colsMax) {
-    alert(`Columns range exceeded: 1-${tableState.colsMax}`);
-    return;
-    // dispatch({
-    //   type: SET_ERROR,
-    //   payload: {[generateTableColsMaxError]: `Columns range exceeded: 1-${tableState.colsMax}`}
-    // });
-  } 
-  // else {
-  //   dispatch({
-  //     type: CLEAR_ERROR,
-  //     payload: generateTableColsMaxError
-  //   });
-  // }
+  // Import validation
+  if (data.length > 0 && (rowsAmount > tableState.rowsMax || colsAmount > tableState.colsMax)) {
+    dispatch({
+      type: SET_ERROR,
+      payload: {[importCsvError]:`Your table is too big. Max limits for rows is ${tableState.rowsMax} and columns ${tableState.colsMax}`}
+    });
+  } else {
+    dispatch({
+      type: CLEAR_ERROR,
+      payload: importCsvError
+    });
+  }
 
   const errors = getState().ui.errors;
 
-  if (!errors[generateTableRowsMaxError] && !errors[generateTableColsMaxError]) {
-
-    // If table is too big it may take some time to build it,
-    // so we need to show user that app did not freezed and it's process
-    dispatch({
-      type: SET_LOADING_UI,
-      payload: generateTableLoading
-    });
+  if (!validateOnly && !errors[generateTableRowsMaxError] && !errors[generateTableColsMaxError] && !errors[importCsvError]) {
 
     let rows = [];
 
@@ -73,10 +69,10 @@ const generateTableAction = ({ rowsAmount, colsAmount, data = [] }) => (dispatch
       payload: { rowsAmount, colsAmount, rows }
     });
 
-    dispatch({
-      type: CLEAR_LOADING_UI,
-      payload: generateTableLoading
-    });
+    // Trigger modal close
+    return true;
+  } else {
+    return false;
   }
 }
 

@@ -88,7 +88,7 @@ const GenerateTableForm = props => {
               value={rowsInput}
               onChange={inputChangeHandler} 
             />
-            {errors[generateTableRowsMaxError] ? <div className='error-message'>{errors[generateTableRowsMaxError]}</div> : null}
+            <div className='error-message'>{errors[generateTableRowsMaxError] || null}</div>
             <label>Columns:</label>
             <input
               id='colsInput'
@@ -96,7 +96,7 @@ const GenerateTableForm = props => {
               value={colsInput}
               onChange={inputChangeHandler} 
             />
-            {errors[generateTableColsMaxError] ? <div className='error-message'>{errors[generateTableColsMaxError]}</div> : null}
+            <div className='error-message'>{errors[generateTableColsMaxError] || null}</div> 
             <button 
               type='submit'
               className='generateTableBtn'

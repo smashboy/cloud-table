@@ -25,10 +25,15 @@ export default (state = initialState, { type, payload }) => {
     case SET_ERROR:
       return {...state, errors: Object.assign({}, state.errors, payload)};
     case CLEAR_ERROR:
-        if (state.errors[payload]) {
-          delete state.errors[payload];
-        }
-      return {...state, errors: state.errors};
+      return {
+        ...state, 
+        errors: Object.keys(state.errors)
+        .filter(key => key !== payload)
+        .reduce((result, current) => {
+          result[current] = state.errors[current];
+          return result;
+        }, {})
+      };
     case SET_LOADING_UI:
       return {...state, loading: state.loading.concat(payload)};
     case CLEAR_LOADING_UI:

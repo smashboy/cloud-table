@@ -26,9 +26,10 @@ export const CLEAR_LOADING_UI = 'CLEAR_LOADING_UI';
 // UI -> errors keys -> generate table
 export const generateTableColsMaxError = 'generateTableColsMaxError';
 export const generateTableRowsMaxError = 'generateTableRowsMaxError';
-
-// UI -> errors keys -> import table
-export const importTableError = 'importTableError';
-
 // UI -> loading key -> generate table
-export const generateTableLoading = 'generateTableLoading';
+// export const generateTableLoading = 'generateTableLoading';
+
+// UI -> error key -> import table
+export const importCsvError = 'importCsvError';
+// UI -> loading key -> import table
+export const importCsvLoading = 'importCsvLoading';

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import ClickOutListener from 'react-onclickout';
+import TextareaAutosize from 'react-textarea-autosize';
 import setCellValueAction from '../../redux/actions/tableActions/setCellValueAction';
 
 const Cell = props => {
@@ -34,7 +35,7 @@ const Cell = props => {
         onClick={setEditModeOnHandler}
       >
         {editModeState ?
-          <input type='text' onChange={inputChangeHandler} value={inputValue} autoFocus/>
+          <TextareaAutosize onChange={inputChangeHandler} value={inputValue} autoFocus />
             :
           value
         }

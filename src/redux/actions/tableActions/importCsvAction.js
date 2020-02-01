@@ -40,15 +40,25 @@ const importCsvAction = event => (dispatch, getState) => {
         payload: importCsvLoading
       });
 
-      // Don't know why react-csv(export btn) add those weird symbols
-      const validCsvData = readerEvent.target.result.split('ï»¿').pop();
+      const validCsvData = readerEvent.target.result;
+      
+      const parseConfig = { 
+        ltrim: true, 
+        rtrim: true, 
+        delimiter: ',', 
+        quote: '"', 
+        trim: true,
+        bom: true,
+        relax: true,
+        skip_empty_lines: true
+      };
 
-      CsvParse(validCsvData, { quote: '"', ltrim: true, rtrim: true, delimiter: ',' }, (err, output) => {
+      CsvParse(validCsvData, parseConfig, (err, output) => {
         
         if (err) {
           dispatch({
             type: SET_ERROR,
-            payload: {[importCsvError]: 'Unknown parse error, please try again.'}
+            payload: {[importCsvError]: err.message}
           });
         } else {
           dispatch({

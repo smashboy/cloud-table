@@ -61,6 +61,7 @@
   z-index: 1000;
   transform: translate(-50%, -50%);
   padding: 10px 20px;
+  min-width: 420px;
   background-color: #eeeeee;
   box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75)
 }
@@ -75,17 +76,15 @@
 }
 
 .generate-table-form input {
-  width: 100%;
+  width: 98.3%;
   box-shadow: none;
   border: 1.5px solid #000000;
   padding: 10px 0 10px 5px;
-  margin: 10px 0 10px -4px;
+  margin: 10px 0;
   color: #000000
 }
 
 .generate-table-form .error-message {
-  display: inline-block;
-  width: 100%;
   margin: 5px 0 15px 0;
   color: red;
 }

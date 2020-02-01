@@ -35,15 +35,20 @@ const importCsvAction = event => (dispatch, getState) => {
 
     reader.onloadend = readerEvent => {
 
+      dispatch({
+        type: CLEAR_LOADING_UI,
+        payload: importCsvLoading
+      });
+
       // Don't know why react-csv(export btn) add those weird symbols
       const validCsvData = readerEvent.target.result.split('ï»¿').pop();
 
-      CsvParse(validCsvData, (err, output) => {
+      CsvParse(validCsvData, { quote: '"', ltrim: true, rtrim: true, delimiter: ',' }, (err, output) => {
         
         if (err) {
           dispatch({
-            type: importCsvError,
-            payload: 'Unknown parse error, please try again.'
+            type: SET_ERROR,
+            payload: {[importCsvError]: 'Unknown parse error, please try again.'}
           });
         } else {
           dispatch({
@@ -52,17 +57,12 @@ const importCsvAction = event => (dispatch, getState) => {
           });
         }
 
-        const rowsAmount = output.length;
-        const colsAmount = output[0].length;
-
         const errors = getState().ui.errors;
 
         if (!errors[importCsvError]) {
 
-          dispatch({
-            type: CLEAR_LOADING_UI,
-            payload: importCsvLoading
-          });
+          const rowsAmount = output.length;
+          const colsAmount = output[0].length;
 
           const success = dispatch(generateTableAction({ rowsAmount, colsAmount, data: output }));
           // Trigger modal close

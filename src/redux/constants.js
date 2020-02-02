@@ -5,6 +5,12 @@
 // Table general types
 export const SET_GENERATED_TABLE = 'SET_GENERATED_TABLE';
 
+export const ADD_NEW_ROW = 'ADD_NEW_ROW';
+export const ADD_NEW_COL = 'ADD_NEW_COL';
+
+export const DELETE_ROW = 'DELETE_ROW';
+export const DELETE_COL = 'DELETE_COL';
+
 // Table -> Cell types
 export const SET_CELL_VALUE = 'SET_CELL_VALUE';
 export const CLEAR_ALL_CELLS = 'CLEAR_ALL_CELLS';

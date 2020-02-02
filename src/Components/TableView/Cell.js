@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { connect } from 'react-redux';
 import ClickOutListener from 'react-onclickout';
 import TextareaAutosize from 'react-textarea-autosize';
 import setCellValueAction from '../../redux/actions/tableActions/setCellValueAction';
+import updateTableRowsAction from '../../redux/actions/tableActions/updateTableRowsAction';
+import updateTableColsAction from '../../redux/actions/tableActions/updateTableColsAction';
 
 const Cell = props => {
 
-  const { cellData: { value, rowIndex, colIndex }, setCellValueAction } = props;
+  const { 
+    cellData: { value, rowIndex, colIndex }, 
+    setCellValueAction, updateTableRowsAction, updateTableColsAction
+  } = props;
+
   const [editModeState, setEditMode] = useState(false);
   const [inputValue, setInputValue] = useState('');
 
@@ -35,7 +41,56 @@ const Cell = props => {
         onClick={setEditModeOnHandler}
       >
         {editModeState ?
-          <TextareaAutosize onChange={inputChangeHandler} value={inputValue} autoFocus />
+          <Fragment>
+            <TextareaAutosize onChange={inputChangeHandler} value={inputValue} autoFocus />
+            {/* DELETE ROW OR COL BUTTONS */}
+            <div className="dropdown">
+              <button className="dropbtn delete">Delete</button>
+              <div className="dropdown-content">
+                <button
+                onClick={() => {
+                  setEditModeOffHandler();
+                  updateTableRowsAction({ rowIndex, shouldDelete: true })
+                }}
+              >Row</button>
+              <button
+                onClick={() => {
+                  setEditModeOffHandler();
+                  updateTableColsAction({ colIndex, shouldDelete: true })
+                }}
+              >Column</button>
+              </div>
+            </div>
+            {/* ADD ROW OR COL BUTTONS */}
+            <button 
+              className='edit-table-btn top'
+              onClick={() => {
+                setEditModeOffHandler();
+                updateTableRowsAction({ rowIndex: rowIndex });
+              }}
+            >+</button>
+            <button 
+              className='edit-table-btn bottom'
+              onClick={() => {
+                setEditModeOffHandler();
+                updateTableRowsAction({ rowIndex: rowIndex + 1 });
+              }}
+            >+</button>
+            <button 
+              className='edit-table-btn left'
+              onClick={() => {
+                setEditModeOffHandler();
+                updateTableColsAction({ colIndex })
+              }}
+            >+</button>
+            <button 
+              className='edit-table-btn right'
+              onClick={() => {
+                setEditModeOffHandler();
+                updateTableColsAction({ colIndex: colIndex + 1 })
+              }}
+            >+</button>
+          </Fragment>
             :
           value
         }
@@ -45,7 +100,9 @@ const Cell = props => {
 }
 
 const mapActionsToProps = {
-  setCellValueAction
+  setCellValueAction,
+  updateTableColsAction,
+  updateTableRowsAction
 };
 
 export default connect(null, mapActionsToProps)(Cell);

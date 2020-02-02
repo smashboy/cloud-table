@@ -50,13 +50,13 @@ const Cell = props => {
                 <button
                 onClick={() => {
                   setEditModeOffHandler();
-                  updateTableRowsAction({ rowIndex, shouldDelete: true })
+                  updateTableRowsAction({ rowIndex, shouldDelete: true });
                 }}
               >Row</button>
               <button
                 onClick={() => {
                   setEditModeOffHandler();
-                  updateTableColsAction({ colIndex, shouldDelete: true })
+                  updateTableColsAction({ colIndex, shouldDelete: true });
                 }}
               >Column</button>
               </div>
@@ -80,14 +80,14 @@ const Cell = props => {
               className='edit-table-btn left'
               onClick={() => {
                 setEditModeOffHandler();
-                updateTableColsAction({ colIndex })
+                updateTableColsAction({ colIndex });
               }}
             >+</button>
             <button 
               className='edit-table-btn right'
               onClick={() => {
                 setEditModeOffHandler();
-                updateTableColsAction({ colIndex: colIndex + 1 })
+                updateTableColsAction({ colIndex: colIndex + 1 });
               }}
             >+</button>
           </Fragment>

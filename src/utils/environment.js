@@ -1,6 +1,6 @@
 const environment = {
   // Ability to easier control what should be in build
-  production: true
+  production: false
 };
 
 export default environment;

@@ -9,10 +9,12 @@ const generateTableAction = ({ rowsAmount, colsAmount, data = [], validateOnly =
 
   const tableState = getState().table;
 
-  if (rowsAmount > tableState.rowsMax) {
+  const { rowsMax, colsMax } = tableState;
+
+  if (rowsAmount > rowsMax) {
     dispatch({
       type: SET_ERROR,
-      payload: {[generateTableRowsMaxError]: `Rows range exceeded: 1-${tableState.rowsMax}`}
+      payload: {[generateTableRowsMaxError]: `Rows range exceeded: 1-${rowsMax}`}
     });
   } else {
     dispatch({
@@ -21,10 +23,10 @@ const generateTableAction = ({ rowsAmount, colsAmount, data = [], validateOnly =
     });
   }
 
-  if (colsAmount > tableState.colsMax) {
+  if (colsAmount > colsMax) {
     dispatch({
       type: SET_ERROR,
-      payload: {[generateTableColsMaxError]: `Columns range exceeded: 1-${tableState.colsMax}`}
+      payload: {[generateTableColsMaxError]: `Columns range exceeded: 1-${colsMax}`}
     });
   } else {
     dispatch({
@@ -34,10 +36,10 @@ const generateTableAction = ({ rowsAmount, colsAmount, data = [], validateOnly =
   }
 
   // Import validation
-  if (data.length > 0 && (rowsAmount > tableState.rowsMax || colsAmount > tableState.colsMax)) {
+  if (data.length > 0 && (rowsAmount > rowsMax || colsAmount > colsMax)) {
     dispatch({
       type: SET_ERROR,
-      payload: {[importCsvError]:`Your table is too big. Max limits for rows is ${tableState.rowsMax} and columns ${tableState.colsMax}`}
+      payload: {[importCsvError]:`Your table is too big. Max limits for rows is ${rowsMax} and columns ${colsMax}`}
     });
   } else {
     dispatch({

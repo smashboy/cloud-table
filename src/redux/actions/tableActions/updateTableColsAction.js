@@ -1,4 +1,4 @@
-import { ADD_NEW_COL, DELETE_COL } from '../../constants';
+import { ADD_COL, DELETE_COL } from '../../constants';
 
 const updateTableColsAction = ({ colIndex, shouldDelete = false }) => (dispatch, getState) => {
 
@@ -19,7 +19,7 @@ const updateTableColsAction = ({ colIndex, shouldDelete = false }) => (dispatch,
   }
 
   dispatch({
-    type: ADD_NEW_COL,
+    type: ADD_COL,
     payload: colIndex
   });
 }

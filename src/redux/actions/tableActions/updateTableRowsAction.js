@@ -1,4 +1,4 @@
-import { ADD_NEW_ROW, DELETE_ROW } from '../../constants';
+import { ADD_ROW, DELETE_ROW } from '../../constants';
 
 const updateTableRowsAction = ({ rowIndex, shouldDelete = false }) => (dispatch, getState) => {
 
@@ -29,7 +29,7 @@ const updateTableRowsAction = ({ rowIndex, shouldDelete = false }) => (dispatch,
   }
 
   dispatch({
-    type: ADD_NEW_ROW,
+    type: ADD_ROW,
     payload: { newRow, rowIndex }
   });
 }

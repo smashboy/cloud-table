@@ -1,7 +1,7 @@
 import { 
   SET_GENERATED_TABLE, 
   SET_CELL_VALUE, CLEAR_ALL_CELLS,
-  ADD_NEW_ROW, ADD_NEW_COL,
+  ADD_ROW, ADD_COL,
   DELETE_ROW, DELETE_COL
 } from '../constants';
 
@@ -41,7 +41,7 @@ export default (state = initialState, { type, payload }) => {
           row.map(cell => ({ ...cell, value: '' }))
         )
       };
-    case ADD_NEW_ROW:
+    case ADD_ROW:
       const { rowIndex, newRow } = payload;
       return {
         ...state,
@@ -53,7 +53,7 @@ export default (state = initialState, { type, payload }) => {
           ...state.rows.slice(rowIndex).map(row => row.map(cell => ({...cell, rowIndex: cell.rowIndex + 1})))
         ]
       };
-    case ADD_NEW_COL:
+    case ADD_COL:
       return {
         ...state,
         colsAmount: state.colsAmount + 1,

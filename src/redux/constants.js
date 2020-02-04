@@ -11,6 +11,9 @@ export const ADD_COL = 'ADD_COL';
 export const DELETE_ROW = 'DELETE_ROW';
 export const DELETE_COL = 'DELETE_COL';
 
+export const UNDO_TABLE = 'UNDO_TABLE';
+export const REDO_TABLE = 'REDO_TABLE';
+
 // Table -> Cell types
 export const SET_CELL_VALUE = 'SET_CELL_VALUE';
 export const CLEAR_ALL_CELLS = 'CLEAR_ALL_CELLS';

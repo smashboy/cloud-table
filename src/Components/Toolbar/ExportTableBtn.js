@@ -10,7 +10,7 @@ const ExportTableBtn = props => {
   const downloadHandler = tableData => {
     try {
       // Before exporting table we need to reformat data
-      const formattedTableData = tableData.map(row => 
+      const formattedTableData = tableData.rows.map(row => 
         row.map(cell => cell.value)
       );
 
@@ -31,7 +31,7 @@ const ExportTableBtn = props => {
 }
 
 const mapStateToProps = state => ({
-  tableData: state.table.rows
+  tableData: state.table.tableHistory[state.table.currentTableIndex]
 });
 
 export default connect(mapStateToProps)(ExportTableBtn);

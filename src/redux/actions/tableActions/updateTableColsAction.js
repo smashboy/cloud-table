@@ -2,8 +2,9 @@ import { ADD_COL, DELETE_COL } from '../../constants';
 
 const updateTableColsAction = ({ colIndex, shouldDelete = false }) => (dispatch, getState) => {
 
-  const currentTable = getState().table;
-  const { colsAmount, colsMax } = currentTable;
+  const currentTableState = getState().table;
+  const { tableHistory, currentTableIndex, colsMax } = currentTableState;
+  const { colsAmount } = tableHistory[currentTableIndex];
 
   if (shouldDelete) {
     dispatch({

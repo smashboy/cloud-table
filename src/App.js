@@ -7,7 +7,7 @@ import './App.css';
 
 const App = props => {
 
-  const { tableData, generateTableAction } = props;
+  const { tableHistory, currentTableIndex, generateTableAction } = props;
 
   useEffect(() => {
     generateTableAction({ rowsAmount: 5, colsAmount: 5 });
@@ -18,16 +18,21 @@ const App = props => {
       <Toolbar />
       <div className='appContainer'>
         <h3>Table Preview:</h3>
-        <TableView
-          data={tableData}
-        />
+        {tableHistory.length > 0 ?
+          <TableView
+            data={tableHistory[currentTableIndex].rows}
+          />
+            :
+          null
+        }
       </div>
     </Fragment>
   );
 }
 
 const mapStateToProps = state => ({
-  tableData: state.table.rows,
+  tableHistory: state.table.tableHistory,
+  currentTableIndex: state.table.currentTableIndex
 });
 
 const mapActionsToProps = {

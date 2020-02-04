@@ -2,8 +2,9 @@ import { ADD_ROW, DELETE_ROW } from '../../constants';
 
 const updateTableRowsAction = ({ rowIndex, shouldDelete = false }) => (dispatch, getState) => {
 
-  const currentTable = getState().table;
-  const { colsAmount, rowsAmount, rowsMax } = currentTable;
+  const currentTableState = getState().table;
+  const { rowsMax, tableHistory, currentTableIndex } = currentTableState;
+  const { colsAmount, rowsAmount } = tableHistory[currentTableIndex];
 
   let newRow = [];
 

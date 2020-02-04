@@ -2,7 +2,8 @@ import {
   SET_GENERATED_TABLE, 
   SET_CELL_VALUE, CLEAR_ALL_CELLS,
   ADD_ROW, ADD_COL,
-  DELETE_ROW, DELETE_COL
+  DELETE_ROW, DELETE_COL,
+  UNDO_TABLE, REDO_TABLE
 } from '../constants';
 
 const initialState = {
@@ -10,54 +11,116 @@ const initialState = {
   // Table limits
   colsMax: 20,
   rowsMax: 500,
+  // Using this limit to avoid a lot of unnecessary information
+  // if history limit is reached, first element  will be removed
+  tableHistoryLimit: 50,
+
+  currentTableIndex: null,
+
+  tableHistory: []
 
   // Total number of rows and columns in table:
-  colsAmount: 0,
-  rowsAmount: 0,
+  // colsAmount: 0,
+  // rowsAmount: 0,
 
-  // List of rows
-  // Each row consists of array of cells (2D Array)
-  rows: []
+  // // List of rows
+  // // Each row consists of array of cells (2D Array)
+  // rows: [],
+
 };
 
+const tableHistoryManager = ({ currentTableIndex, tableData, tableHistory, tableHistoryLimit }) => {
+
+  let updatedTableHistory = [];
+  let arrayShift = false;
+
+  // Init setup
+  if (tableHistory.length === 0) {
+    updatedTableHistory = [...tableHistory, tableData];
+    return { updatedTableHistory, updatedCurrentTableIndex: 0 };
+  }
+
+  // Clearing up space for new data
+  if (tableHistory.length === tableHistoryLimit) {
+    tableHistory.shift();
+    arrayShift = true;
+  }
+
+  const limitChecker = arrayShift ? tableHistory.length : tableHistory.length - 1;
+
+  updatedTableHistory = currentTableIndex < limitChecker 
+      ? 
+    [...tableHistory.slice(0, currentTableIndex + 1), tableData] 
+      :
+    [...tableHistory, tableData];
+
+  return { updatedTableHistory, updatedCurrentTableIndex: updatedTableHistory.length - 1 };
+}
+
 export default (state = initialState, { type, payload }) => {
+  
+  // Need this data in all cases
+  const { tableHistory, tableHistoryLimit, currentTableIndex } = state;
+
   switch (type) {
-    case SET_GENERATED_TABLE:
+    case SET_GENERATED_TABLE: {
       const { rowsAmount, colsAmount, rows } = payload;
-      return { ...state, rows, rowsAmount, colsAmount };
-    case SET_CELL_VALUE:
-      return {
-        ...state,
-        rows: Object.assign([...state.rows], {
-          [payload.rowIndex]: Object.assign([...state.rows[payload.rowIndex]], {
-            [payload.colIndex]: payload
+
+      const tableData = {
+        rows, rowsAmount, colsAmount 
+      };
+
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, tableHistory, tableHistoryLimit, currentTableIndex });
+      return { ...state, tableHistory: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
+    }
+    case SET_CELL_VALUE: {
+      const { rowIndex, colIndex } = payload;
+
+      const tableData = {
+        ...tableHistory[currentTableIndex],
+        rows: Object.assign([...tableHistory[currentTableIndex].rows], {
+          [rowIndex]: Object.assign([...tableHistory[currentTableIndex].rows[rowIndex]], {
+            [colIndex]: payload
           })
         })
       };
-    case CLEAR_ALL_CELLS:
-      return {
-        ...state,
-        rows: state.rows.map(row => 
+
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, tableHistory, tableHistoryLimit, currentTableIndex });
+      return { ...state, tableHistory: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
+    }
+    case CLEAR_ALL_CELLS: {
+      const tableData = {
+        ...tableHistory[currentTableIndex],
+        rows: tableHistory[currentTableIndex].rows.map(row => 
           row.map(cell => ({ ...cell, value: '' }))
         )
       };
-    case ADD_ROW:
+
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, tableHistory, tableHistoryLimit, currentTableIndex });
+      return { ...state, tableHistory: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
+    }
+    case ADD_ROW: {
       const { rowIndex, newRow } = payload;
-      return {
-        ...state,
-        rowsAmount: state.rowsAmount + 1,
+
+      const tableData = {
+        ...tableHistory[currentTableIndex],
+        rowsAmount: tableHistory[currentTableIndex].rowsAmount + 1,
         rows: [
-          ...state.rows.slice(0, rowIndex), 
+          ...tableHistory[currentTableIndex].rows.slice(0, rowIndex), 
           newRow,
           // Row indexes are shifting, because of new row
-          ...state.rows.slice(rowIndex).map(row => row.map(cell => ({...cell, rowIndex: cell.rowIndex + 1})))
+          ...tableHistory[currentTableIndex].rows.slice(rowIndex).map(row => row.map(cell => ({...cell, rowIndex: cell.rowIndex + 1})))
         ]
       };
-    case ADD_COL:
-      return {
-        ...state,
-        colsAmount: state.colsAmount + 1,
-        rows: state.rows.map((row, rowIndex) => [
+
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, tableHistory, tableHistoryLimit, currentTableIndex });
+      return { ...state, tableHistory: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
+    }
+    case ADD_COL: {
+      const tableData = {
+        ...tableHistory[currentTableIndex],
+        colsAmount: tableHistory[currentTableIndex].colsAmount + 1,
+        rows: tableHistory[currentTableIndex].rows.map((row, rowIndex) => [
           ...row.slice(0, payload),
           {
             rowIndex: rowIndex,
@@ -68,27 +131,43 @@ export default (state = initialState, { type, payload }) => {
           ...row.slice(payload).map(cell => ({...cell, colIndex: cell.colIndex + 1}))
         ])
       };
-    case DELETE_ROW:
-      return {
-        ...state,
-        rowsAmount: state.rowsAmount - 1,
-        rows: state.rows
+      
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, tableHistory, tableHistoryLimit, currentTableIndex });
+      return { ...state, tableHistory: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
+    }
+    case DELETE_ROW: {
+      const tableData = {
+        ...tableHistory[currentTableIndex],
+        rowsAmount: tableHistory[currentTableIndex].rowsAmount - 1,
+        rows: tableHistory[currentTableIndex].rows
           .filter(row => row[0].rowIndex !== payload)
           .map((row, rowIndex) => 
             row.map(cell => ({...cell, rowIndex}))
           )
       };
-    case DELETE_COL:
-      return {
-        ...state,
-        colsAmount: state.colsAmount - 1,
-        rows: state.rows
+
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, tableHistory, tableHistoryLimit, currentTableIndex });
+      return { ...state, tableHistory: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
+    }
+    case DELETE_COL: {
+      const tableData = {
+        ...tableHistory[currentTableIndex],
+        colsAmount:  tableHistory[currentTableIndex].colsAmount - 1,
+        rows: tableHistory[currentTableIndex].rows
           .map(
             row => row
               .filter(cell => cell.colIndex !== payload)
               .map((cell, colIndex) => ({...cell, colIndex}))
           )
       };
+
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, tableHistory, tableHistoryLimit, currentTableIndex });
+      return { ...state, tableHistory: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
+    }
+    case UNDO_TABLE:
+      return { ...state, currentTableIndex: state.currentTableIndex - 1 };
+    case REDO_TABLE:
+      return { ...state, currentTableIndex: state.currentTableIndex + 1 };
     default:
       return state;
   }

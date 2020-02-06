@@ -1,23 +1,24 @@
-table {
-  border: 1.5px solid #b3b3b3;
-  padding: 5px;
-  height: 80vh;
-  max-width: 100%;
-  display: block;
-  overflow: auto;
+.grid {
+  border: 1px solid #d9dddd;
+  background-color: #eeeeee;
 }
 
-tr, td {
-  border: 1px solid black;
-}
-
-tbody {
-  margin: 15px;
-}
-
-td {
+.grid-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  text-align: center;
   cursor: pointer;
-  position: relative;
+  position: relative
+}
+
+.grid-item:hover {
+  background-color: #cccccc
+}
+
+.grid-item.edit-mode {
+  background-color: rgba(255, 153, 0, .25);
 }
 
 .edit-table-btn {
@@ -54,27 +55,6 @@ td {
   transform: translateX(-50%)
 }
 
-td:hover, th:hover {
-  background-color: rgba(255, 153, 0, .25);
-}
-
-td.empty {
-  padding: 14px 32px;
-}
-
-td.filled {
-  padding: 8px 14px;
-}
-
-td.selected {
-  background-color: rgba(255, 153, 0, .25);
-}
-
-td.editMode {
-  padding: 8px 14px;
-  background-color: rgba(255, 153, 0, .5);
-}
-
 .dropbtn {
   background-color: #4CAF50;
   color: white;
@@ -82,6 +62,12 @@ td.editMode {
   font-size: 16px;
   border: none;
   cursor: pointer;
+  display: flex;
+}
+
+.dropbtn img {
+  width: 16px;
+  height: 16px;
 }
 
 .dropbtn.delete {
@@ -89,10 +75,11 @@ td.editMode {
 }
 
 .dropdown {
-  position: relative;
+  position: absolute;
+  right: 0;
+  bottom: -20px;
   display: flex;
-  margin: 0 auto;
-  width: 40%;
+  z-index: 100;
   justify-content: center
 }
 

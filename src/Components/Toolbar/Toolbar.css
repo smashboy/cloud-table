@@ -1,6 +1,7 @@
 .toolbar {
-  background-color: #cccccc;
+  background-color: #eeeeee;
   padding: 5px;
+  border-bottom: 1px solid #d9dddd;
 }
 
 .import-container {

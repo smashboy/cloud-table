@@ -10,7 +10,8 @@ const initialState = {
 
   // Table limits
   colsMax: 20,
-  rowsMax: 500,
+  rowsMax: 10000, // table now can hold large amount of data
+
   // Using this limit to avoid a lot of unnecessary information
   // if history limit is reached, first element  will be removed
   tableHistoryLimit: 50,
@@ -18,15 +19,6 @@ const initialState = {
   currentTableIndex: null,
 
   tableHistory: []
-
-  // Total number of rows and columns in table:
-  // colsAmount: 0,
-  // rowsAmount: 0,
-
-  // // List of rows
-  // // Each row consists of array of cells (2D Array)
-  // rows: [],
-
 };
 
 const tableHistoryManager = ({ currentTableIndex, tableData, tableHistory, tableHistoryLimit }) => {

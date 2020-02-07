@@ -1,16 +1,18 @@
 import React, { useState, Fragment } from 'react';
 import { connect } from 'react-redux';
 import ClickOutListener from 'react-onclickout';
-import TextareaAutosize from 'react-textarea-autosize';
 import setCellValueAction from '../../redux/actions/tableActions/setCellValueAction';
 import updateTableRowsAction from '../../redux/actions/tableActions/updateTableRowsAction';
 import updateTableColsAction from '../../redux/actions/tableActions/updateTableColsAction';
+import deleteIcon from '../../assets/icons/delete-icon.png';
 
 const Cell = props => {
 
   const { 
-    cellData: { value, rowIndex, colIndex }, 
-    setCellValueAction, updateTableRowsAction, updateTableColsAction
+    data, rowIndex, columnIndex,
+    style,
+    setCellValueAction, 
+    updateTableRowsAction, updateTableColsAction
   } = props;
 
   const [editModeState, setEditMode] = useState(false);
@@ -23,30 +25,41 @@ const Cell = props => {
     if (!editModeState) {
       setEditMode(true);
       // If table is not new, we need to pass cell value to input
-      setInputValue(value);
+      setInputValue(data[rowIndex][columnIndex].value);
     }
   }
 
   const setEditModeOffHandler = () => {
     if (editModeState) {
       setEditMode(false);
-      if (inputValue !== value) setCellValueAction({ rowIndex, colIndex, value: inputValue });
+      if (inputValue !== data[rowIndex][columnIndex].value) setCellValueAction({ rowIndex, colIndex: columnIndex, value: inputValue });
     }
   }
 
   return (
     <ClickOutListener onClickOut={setEditModeOffHandler}>
-      <td
-        className={editModeState ? 'editMode' : value.length === 0 ? 'empty' : 'filled'} // Changing css classes depending on cell state
-        onClick={setEditModeOnHandler}
+      <div
+       // cell padding
+       style={{
+        ...style,
+        left: style.left + 5,
+        top: style.top + 5,
+        width: style.width - 5,
+        height: style.height - 5
+      }}
+      // Changing css classes depending on cell state
+       className={`grid-item ${editModeState ? 'edit-mode' : ''}`}
+       onClick={setEditModeOnHandler}
       >
-        {editModeState ?
+        {editModeState ? 
           <Fragment>
-            <TextareaAutosize onChange={inputChangeHandler} value={inputValue} autoFocus />
+            <textarea onChange={inputChangeHandler} value={inputValue} autoFocus />
             {/* DELETE ROW OR COL BUTTONS */}
-            <div className="dropdown">
-              <button className="dropbtn delete">Delete</button>
-              <div className="dropdown-content">
+            <div className='dropdown'>
+              <button className='dropbtn delete'>
+                <img src={deleteIcon} alt='' />
+              </button>
+              <div className='dropdown-content'>
                 <button
                 onClick={() => {
                   setEditModeOffHandler();
@@ -56,7 +69,7 @@ const Cell = props => {
               <button
                 onClick={() => {
                   setEditModeOffHandler();
-                  updateTableColsAction({ colIndex, shouldDelete: true });
+                  updateTableColsAction({ colIndex: columnIndex, shouldDelete: true });
                 }}
               >Column</button>
               </div>
@@ -80,21 +93,21 @@ const Cell = props => {
               className='edit-table-btn left'
               onClick={() => {
                 setEditModeOffHandler();
-                updateTableColsAction({ colIndex });
+                updateTableColsAction({ colIndex: columnIndex });
               }}
             >+</button>
             <button 
               className='edit-table-btn right'
               onClick={() => {
                 setEditModeOffHandler();
-                updateTableColsAction({ colIndex: colIndex + 1 });
+                updateTableColsAction({ colIndex: columnIndex + 1 });
               }}
             >+</button>
           </Fragment>
             :
-          value
+          data[rowIndex][columnIndex].value
         }
-      </td>
+      </div>
     </ClickOutListener>
   );
 }

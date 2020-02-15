@@ -56,7 +56,7 @@ const TableContainer: React.FunctionComponent<Props> = props => {
      * @param index
      * column index
      */
-    const getCol = (arr: number[][], index: number) => {
+    const getCol = (arr: number[][], index: number): number => {
       const col = [];
       for (let i = 0; i < arr.length; i++) {
         col.push(arr[i][index]); 

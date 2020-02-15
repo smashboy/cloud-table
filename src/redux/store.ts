@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, combineReducers, applyMiddleware, Store } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { MakeStore } from 'next-redux-wrapper';
@@ -24,7 +24,7 @@ export interface storeStateInterface {
 * @param initialState the store's initial state (on the client side, the state of the server-side store is passed here)
 */
 
-export const makeStore: MakeStore = (initialState: storeStateInterface) => (
+export const makeStore: MakeStore = (initialState: storeStateInterface): Store => (
   createStore(
     reducers,
     initialState,

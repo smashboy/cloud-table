@@ -51,15 +51,15 @@ const GenerateTableForm: React.FunctionComponent<Props> = props => {
     });
   }, [inputState]);
 
-  const modalOpenHandler = () => {
+  const modalOpenHandler = (): void => {
     setModal(true);
   }
 
-  const modalCloseHandler = () => {
+  const modalCloseHandler = (): void => {
     setModal(false);
   }
 
-  const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const target = event.target.id;
     // If user is dum-dum and enters float number or a negative number
     // or user is trying to pass bunch of zeroes at the beginning
@@ -78,7 +78,7 @@ const GenerateTableForm: React.FunctionComponent<Props> = props => {
     });
   }
 
-  const submitHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const submitHandler = (event: React.MouseEvent<HTMLButtonElement>): void => {
     // Prevent page from reloading on form submit
     event.preventDefault();
 

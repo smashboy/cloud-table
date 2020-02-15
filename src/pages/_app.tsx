@@ -13,9 +13,9 @@ import { Store } from 'redux';
 // import MenuAppBar from '../components/MenuApp/MenuAppBar';
 // import theme from '../themes/theme';
 
-const generateClasssName = createGenerateClassName({
-  productionPrefix: 'books-app'
-});
+// const generateClasssName = createGenerateClassName({
+//   productionPrefix: 'books-app'
+// });
 
 interface Props {
   store: Store

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
-import TableModel from '../../models/Table/Table';
+import TableModel from '../../../models/Table/Table';
 import { storeStateInterface } from '../../redux/store';
 import generateTableAction from '../../redux/actions/tableActions/generateTableAction';
 import TableView from './TalbeView';

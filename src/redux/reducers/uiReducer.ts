@@ -1,8 +1,9 @@
-import { UiEnums } from '../enums';
+import { UiEnum } from '../enums';
 
 import { 
   UiStateInterface, DispactchErrorInterface, 
-  DispatchLoadingInterface, ErrorInterface 
+  DispatchLoadingInterface, ErrorInterface,
+  DispactchErrorClearInterface 
 } from '../interfaces';
 
 const initialState: UiStateInterface = {
@@ -15,7 +16,7 @@ const initialState: UiStateInterface = {
   errors: {}
 };
 
-type ReducerDispatchProps = DispactchErrorInterface | DispatchLoadingInterface | any
+type ReducerDispatchProps = DispactchErrorInterface & DispatchLoadingInterface & DispactchErrorClearInterface
 
 /**
  * 
@@ -25,9 +26,9 @@ type ReducerDispatchProps = DispactchErrorInterface | DispatchLoadingInterface |
  */
 export default (state: UiStateInterface = initialState, { type, payload }: ReducerDispatchProps): UiStateInterface => {
   switch (type) {
-    case UiEnums.SET_ERROR:
+    case UiEnum.SET_ERROR:
       return {...state, errors: Object.assign({}, state.errors, payload)};
-    case UiEnums.CLEAR_ERROR:
+    case UiEnum.CLEAR_ERROR:
       return {
         ...state, 
         errors: Object.keys(state.errors)
@@ -37,9 +38,9 @@ export default (state: UiStateInterface = initialState, { type, payload }: Reduc
           return result;
         }, {})
       };
-    case UiEnums.SET_LOADING_UI:
+    case UiEnum.SET_LOADING_UI:
       return {...state, loading: state.loading.concat(payload)};
-    case UiEnums.CLEAR_LOADING_UI:
+    case UiEnum.CLEAR_LOADING_UI:
       return {...state, loading: state.loading.filter(loader => loader !== payload)};
     default:
       return state;

@@ -44,11 +44,11 @@ class AppContainer extends App<Props> {
     return (
       <React.Fragment>
         <Head>
-          <title>Books</title>
+          <title>Cloud Table</title>
         </Head>
         <ReduxProvider store={store}>
         {/* <ThemeProvider theme={theme}> */}
-          <StylesProvider generateClassName={generateClasssName}>
+          <StylesProvider>
             <CssBaseline />
             {/* <MenuAppBar /> */}
             {/* <Grid container direction='row' justify='center' alignItems='center'> */}

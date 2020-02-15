@@ -1,8 +1,8 @@
 import { TableEnum } from '../enums';
 
 import { TableHistoryStateInterface, DispatchGeneratedTableInterface } from '../interfaces';
-import TableModel from '../../models/Table/Table';
-import CellModel from '../../models/Table/Cell';
+import TableModel from '../../../models/Table/Table';
+import CellModel from '../../../models/Table/Cell';
 
 const initialState: TableHistoryStateInterface = {
 

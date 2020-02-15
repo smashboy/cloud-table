@@ -1,10 +1,10 @@
-import { TableEnum, KeysEnums, UiEnums } from '../../enums';
+import { TableEnum, ErrorKeysEnum, UiEnum } from '../../enums';
 import { Dispatch, } from 'redux';
 
 import { storeStateInterface } from '../../store';
-import { CellEditModeEnum } from '../../../models/Table/Cell';
+import { CellEditModeEnum } from '../../../../models/Table/Cell';
 import { DispactchErrorInterface, DispactchErrorClearInterface, DispatchGeneratedTableInterface } from '../../interfaces';
-import CellModel from '../../../models/Table/Cell';
+import CellModel from '../../../../models/Table/Cell';
 
 interface generateTableActionProps {
   rowsAmount: number,
@@ -37,47 +37,47 @@ const generateTableAction = ({ rowsAmount, colsAmount, data = [], validateOnly =
 
   if (data.length === 0 && rowsAmount > rowsMax) {
     dispatch({
-      type: UiEnums.SET_ERROR,
-      payload: {[KeysEnums.GENERATE_TABLE_ROWS_MAX_ERROR]: `Rows range exceeded: 1-${rowsMax}`}
+      type: UiEnum.SET_ERROR,
+      payload: {[ErrorKeysEnum.GENERATE_TABLE_ROWS_MAX_ERROR]: `Rows range exceeded: 1-${rowsMax}`}
     });
-  } else if (data.length === 0 && (rowsAmount < rowsMax && errors[KeysEnums.GENERATE_TABLE_ROWS_MAX_ERROR])) {
+  } else if (data.length === 0 && (rowsAmount <= rowsMax && errors[ErrorKeysEnum.GENERATE_TABLE_ROWS_MAX_ERROR])) {
     dispatch({
-      type: UiEnums.CLEAR_ERROR,
-      payload: KeysEnums.GENERATE_TABLE_ROWS_MAX_ERROR
+      type: UiEnum.CLEAR_ERROR,
+      payload: ErrorKeysEnum.GENERATE_TABLE_ROWS_MAX_ERROR
     });
   }
 
   if (data.length === 0 && colsAmount > colsMax) {
     dispatch({
-      type: UiEnums.SET_ERROR,
-      payload: {[KeysEnums.GENERATE_TABLE_COLS_MAX_ERROR]: `Rows range exceeded: 1-${colsMax}`}
+      type: UiEnum.SET_ERROR,
+      payload: {[ErrorKeysEnum.GENERATE_TABLE_COLS_MAX_ERROR]: `Rows range exceeded: 1-${colsMax}`}
     });
-  } else if (data.length === 0 && (colsAmount < colsMax && errors[KeysEnums.GENERATE_TABLE_COLS_MAX_ERROR])) {
+  } else if (data.length === 0 && (colsAmount <= colsMax && errors[ErrorKeysEnum.GENERATE_TABLE_COLS_MAX_ERROR])) {
     dispatch({
-      type: UiEnums.CLEAR_ERROR,
-      payload: KeysEnums.GENERATE_TABLE_COLS_MAX_ERROR
+      type: UiEnum.CLEAR_ERROR,
+      payload: ErrorKeysEnum.GENERATE_TABLE_COLS_MAX_ERROR
     });
   }
 
   // Import validation
   if (data.length > 0 && (rowsAmount > rowsMax || colsAmount > colsMax)) {
     dispatch({
-      type: UiEnums.SET_ERROR,
-      payload: {[KeysEnums.IMPORT_CSV_ERROR]:`Your table is too big. Max limits for rows is ${rowsMax} and columns ${colsMax}`}
+      type: UiEnum.SET_ERROR,
+      payload: {[ErrorKeysEnum.IMPORT_CSV_ERROR]:`Your table is too big. Max limits for rows is ${rowsMax} and columns ${colsMax}`}
     });
-  } else if (data.length > 0 && (rowsAmount < rowsMax && colsAmount < colsMax && errors[KeysEnums.IMPORT_CSV_ERROR])) {
+  } else if (data.length > 0 && (rowsAmount <= rowsMax && colsAmount <= colsMax && errors[ErrorKeysEnum.IMPORT_CSV_ERROR])) {
     dispatch({
-      type: UiEnums.CLEAR_ERROR,
-      payload: KeysEnums.IMPORT_CSV_ERROR
+      type: UiEnum.CLEAR_ERROR,
+      payload: ErrorKeysEnum.IMPORT_CSV_ERROR
     });
   }
 
   const errorsStateAfterValidaiton = getState().ui.errors;
 
   if (
-    !validateOnly && !errorsStateAfterValidaiton[KeysEnums.GENERATE_TABLE_ROWS_MAX_ERROR] 
+    !validateOnly && !errorsStateAfterValidaiton[ErrorKeysEnum.GENERATE_TABLE_ROWS_MAX_ERROR] 
       && 
-    !errorsStateAfterValidaiton[KeysEnums.GENERATE_TABLE_COLS_MAX_ERROR] && !errorsStateAfterValidaiton[KeysEnums.IMPORT_CSV_ERROR]
+    !errorsStateAfterValidaiton[ErrorKeysEnum.GENERATE_TABLE_COLS_MAX_ERROR] && !errorsStateAfterValidaiton[ErrorKeysEnum.IMPORT_CSV_ERROR]
   ) {
 
     let rows: CellModel[][] = [];

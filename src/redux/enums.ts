@@ -14,7 +14,7 @@ export enum TableEnum {
   REDO_TABLE = 'REDO_TABLE'
 }
 
-export enum UiEnums {
+export enum UiEnum {
   SET_ERROR = 'SET_ERROR',
   CLEAR_ERROR = 'CLEAR_ERROR',
 
@@ -27,13 +27,15 @@ export enum UiEnums {
  * but in this case keys used to retrieve specific data from state
 */
 
-export enum KeysEnums {
+export enum ErrorKeysEnum {
   GENERATE_TABLE_COLS_MAX_ERROR = 'GENERATE_TABLE_COLS_MAX_ERROR',
   GENERATE_TABLE_ROWS_MAX_ERROR = 'GENERATE_TABLE_ROWS_MAX_ERROR',
 
   IMPORT_CSV_ERROR = 'IMPORT_CSV_ERROR',
   IMPORT_CSV_LOADING = 'IMPORT_CSV_LOADING'
 }
+
+export enum LoadingKeysEnum {}
 
 // UI -> loading key -> generate table
 // export const generateTableLoading = 'generateTableLoading';

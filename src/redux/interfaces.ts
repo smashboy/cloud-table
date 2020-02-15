@@ -1,15 +1,10 @@
-import { UiEnums, TableEnum } from './enums';
-import TableHistoryModel from '../models/Table/TableHistory';
-import TableModel from '../models/Table/Table';
+import { UiEnum, TableEnum, ErrorKeysEnum, LoadingKeysEnum } from './enums';
+import TableHistoryModel from '../../models/Table/TableHistory';
+import TableModel from '../../models/Table/Table';
 
 export interface TableHistoryStateInterface extends TableHistoryModel {
   colsMax: number,
   rowsMax: number
-}
-
-export interface DispatchGeneratedTableInterface {
-  type: TableEnum,
-  payload: TableModel
 }
 
 export interface UiStateInterface {
@@ -21,16 +16,22 @@ export interface ErrorInterface {
   [key: string]: string 
 }
 
+export interface DispatchGeneratedTableInterface {
+  type: TableEnum,
+  payload: TableModel
+}
+
 export interface DispactchErrorInterface {
-  type: UiEnums,
+  type: UiEnum,
   payload: ErrorInterface
 }
 
 export interface DispactchErrorClearInterface {
-  type: UiEnums
+  type: UiEnum
+  payload: ErrorKeysEnum
 }
 
 export interface DispatchLoadingInterface {
-  type: UiEnums,
-  payload: string
+  type: UiEnum,
+  payload: LoadingKeysEnum
 }

@@ -16,7 +16,7 @@ const initialState: UiStateInterface = {
   errors: {}
 };
 
-type ReducerDispatchProps = DispactchErrorInterface & DispatchLoadingInterface & DispactchErrorClearInterface
+type ReducerDispatchPropsType = DispactchErrorInterface & DispatchLoadingInterface & DispactchErrorClearInterface
 
 /**
  * 
@@ -24,7 +24,7 @@ type ReducerDispatchProps = DispactchErrorInterface & DispatchLoadingInterface &
  * E.g (errors, components loading state)
  * 
  */
-export default (state: UiStateInterface = initialState, { type, payload }: ReducerDispatchProps): UiStateInterface => {
+export default (state: UiStateInterface = initialState, { type, payload }: ReducerDispatchPropsType): UiStateInterface => {
   switch (type) {
     case UiEnum.SET_ERROR:
       return {...state, errors: Object.assign({}, state.errors, payload)};

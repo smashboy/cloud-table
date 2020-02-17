@@ -6,8 +6,6 @@ import { MakeStore } from 'next-redux-wrapper';
 import tableReducer from './reducers/tableReducer';
 import uiReducer from './reducers/uiReducer';
 
-import { TableHistoryStateInterface, UiStateInterface } from './interfaces';
-
 const middleware = [thunk];
 
 const reducers = combineReducers({
@@ -15,16 +13,12 @@ const reducers = combineReducers({
   ui: uiReducer
 });
 
-export interface storeStateInterface {
-  table: TableHistoryStateInterface
-  ui: UiStateInterface
-}
+export type storeStateType = ReturnType<typeof reducers>;
 
 /**
 * @param initialState the store's initial state (on the client side, the state of the server-side store is passed here)
 */
-
-export const makeStore: MakeStore = (initialState: storeStateInterface): Store => (
+export const makeStore: MakeStore = (initialState: storeStateType): Store => (
   createStore(
     reducers,
     initialState,

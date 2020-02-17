@@ -1,7 +1,7 @@
 import Table from './Table';
 
 export default class TableHistory {
-  limit!: number;
+  historyLimit!: number;
   currentTableIndex!: number;
   history!: Table[];
 

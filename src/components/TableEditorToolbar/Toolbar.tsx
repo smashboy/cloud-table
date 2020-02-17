@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
 import GenerateTableForm  from './GenerateTableForm';
+import ImportCsvModal from './ImportCsvModal';
 
 const useStyles = makeStyles({
   toolbar: {
@@ -19,6 +20,7 @@ const Toolbar: React.FunctionComponent = () => {
   return (
     <Paper className={classes.toolbar} square>
       <GenerateTableForm />
+      <ImportCsvModal />
     </Paper>
   );
 }

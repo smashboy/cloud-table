@@ -1,6 +1,6 @@
 import { TableEnum } from '../enums';
 
-import { TableHistoryStateInterface, DispatchGeneratedTableInterface } from '../interfaces';
+import { TableHistoryStateInterface } from '../interfaces';
 import TableModel from '../../../models/Table/Table';
 import CellModel from '../../../models/Table/Cell';
 
@@ -12,27 +12,27 @@ const initialState: TableHistoryStateInterface = {
    
   // Using this limit to avoid a lot of unnecessary information
   // if history limit is reached, first element  will be removed
-  limit: 50,
+  historyLimit: 50,
 
   currentTableIndex: 0,
 
   history: [],
 }
 
-interface tableHistoryManagerPropsInterface {
+interface TableHistoryManagerPropsInterface {
   currentTableIndex: number,
   tableData: TableModel,
   history: TableModel[],
-  limit: number
+  historyLimit: number
 }
 
-interface tableHistoryManagerReturnInterface {
+interface TableHistoryManagerReturnInterface {
   updatedCurrentTableIndex: number,
   updatedTableHistory: TableModel[]
 }
 
 const tableHistoryManager = 
-  ({ currentTableIndex, tableData, history, limit }: tableHistoryManagerPropsInterface): tableHistoryManagerReturnInterface => {
+  ({ currentTableIndex, tableData, history, historyLimit }: TableHistoryManagerPropsInterface): TableHistoryManagerReturnInterface => {
 
   let updatedTableHistory: TableModel[] = [];
   let arrayShift: boolean = false;
@@ -44,7 +44,7 @@ const tableHistoryManager =
   }
 
   // Clearing up space for new data
-  if (history.length === limit) {
+  if (history.length === historyLimit) {
     history.shift();
     arrayShift = true;
   }
@@ -60,21 +60,22 @@ const tableHistoryManager =
   return { updatedTableHistory, updatedCurrentTableIndex: updatedTableHistory.length - 1 };
 }
 
-interface reducerActionPropsInterface {
+interface ReducerDispatchPropsInterface {
   type: TableEnum,
   payload: any
 }
 
-type ReducerDispatchProps = DispatchGeneratedTableInterface;
+// !!! SHOULD USE WHEN ALL ACTIONS AND DISPATCHES WILL BE REFACTORED !!!
+// type ReducerDispatchProps = DispatchGeneratedTableInterface;
 
-export default (state: TableHistoryStateInterface = initialState, { type, payload }: reducerActionPropsInterface): TableHistoryStateInterface => {
+export default (state: TableHistoryStateInterface = initialState, { type, payload }: ReducerDispatchPropsInterface): TableHistoryStateInterface => {
   
   // Need this data in all cases
-  const { history, limit, currentTableIndex } = state;
+  const { history, historyLimit, currentTableIndex } = state;
 
   switch (type) {
     case TableEnum.SET_GENERATED_TABLE: {
-      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData: payload, history, limit, currentTableIndex });
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData: payload, history, historyLimit, currentTableIndex });
       return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
     case TableEnum.SET_CELL_VALUE: {
@@ -89,7 +90,7 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
         })
       };
 
-      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, limit, currentTableIndex });
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex });
       return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
     case TableEnum.CLEAR_ALL_CELLS: {
@@ -100,7 +101,7 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
         )
       };
 
-      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, limit, currentTableIndex });
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex });
       return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
     case TableEnum.ADD_ROW: {
@@ -117,7 +118,7 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
         ]
       };
 
-      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, limit, currentTableIndex });
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex });
       return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
     case TableEnum.ADD_COL: {
@@ -137,7 +138,7 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
         ])
       };
       
-      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, limit, currentTableIndex });
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex });
       return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
     case TableEnum.DELETE_ROW: {
@@ -151,7 +152,7 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
           )
       };
 
-      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, limit, currentTableIndex });
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex });
       return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
     case TableEnum.DELETE_COL: {
@@ -166,7 +167,7 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
           )
       };
 
-      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, limit, currentTableIndex });
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex });
       return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
     case TableEnum.UNDO_TABLE:

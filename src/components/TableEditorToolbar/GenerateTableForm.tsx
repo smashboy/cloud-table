@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import { connect, ConnectedProps } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { storeStateInterface } from '../../redux/store';
+import { storeStateType } from '../../redux/store';
 import generateTableAction from '../../redux/actions/tableActions/generateTableAction';
 import { ErrorKeysEnum } from '../../redux/enums';
 
@@ -47,7 +47,7 @@ const GenerateTableForm: React.FunctionComponent<Props> = props => {
     generateTableAction({
       rowsAmount: rowsInput,
       colsAmount: colsInput,
-      validateOnly: true
+      validateDataOnly: true
     });
   }, [inputState]);
 
@@ -61,6 +61,7 @@ const GenerateTableForm: React.FunctionComponent<Props> = props => {
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const target = event.target.id;
+    
     // If user is dum-dum and enters float number or a negative number
     // or user is trying to pass bunch of zeroes at the beginning
     const parsedValue = Math.abs(parseInt(event.target.value, 10));
@@ -146,7 +147,7 @@ const GenerateTableForm: React.FunctionComponent<Props> = props => {
   );
 }
 
-const mapStateToProps = (state: storeStateInterface) => ({
+const mapStateToProps = (state: storeStateType) => ({
   errors: state.ui.errors
 });
 

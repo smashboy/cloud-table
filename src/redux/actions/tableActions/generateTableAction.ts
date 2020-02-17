@@ -1,17 +1,11 @@
 import { TableEnum, ErrorKeysEnum, UiEnum } from '../../enums';
-import { Dispatch, } from 'redux';
+import { Dispatch } from 'redux';
 
-import { storeStateInterface } from '../../store';
+import { storeStateType } from '../../store';
 import { CellEditModeEnum } from '../../../../models/Table/Cell';
-import { DispactchErrorInterface, DispactchErrorClearInterface, DispatchGeneratedTableInterface } from '../../interfaces';
+import { DispactchErrorInterface, DispactchErrorClearInterface, DispatchGeneratedTableInterface, GenerateTableActionPropsInterface } from '../../interfaces';
 import CellModel from '../../../../models/Table/Cell';
-
-interface generateTableActionProps {
-  rowsAmount: number,
-  colsAmount: number,
-  data?: string[][],
-  validateOnly?: boolean
-}
+import { MyThunkResultType } from '../../types';
 
 /**
  * Generate table action is used to validate table data or create new table structure with or without specified data 
@@ -19,14 +13,14 @@ interface generateTableActionProps {
  * amount of table rows. Max rows amount specified in tableReducer
  * @param colsAmount 
  * amount of table cols. Max cols amount specified in tableReducer
- * @param data
+ * @param data (optional)
  * cells value data. If not specified table will be created with empty cells
- * @param validateOnly
+ * @param validateOnly (optional)
  * function will only check if params are valid and table won't be created
  */ 
 
-const generateTableAction = ({ rowsAmount, colsAmount, data = [], validateOnly = false }: generateTableActionProps) => 
-  (dispatch: Dispatch<DispactchErrorInterface | DispactchErrorClearInterface | DispatchGeneratedTableInterface>, getState: () => storeStateInterface): boolean => {
+const generateTableAction = ({ rowsAmount, colsAmount, data = [], validateDataOnly = false }: GenerateTableActionPropsInterface): MyThunkResultType<boolean> => 
+  (dispatch: Dispatch<DispactchErrorInterface | DispactchErrorClearInterface | DispatchGeneratedTableInterface>, getState: () => storeStateType) => {
 
   const state = getState();
 
@@ -35,24 +29,26 @@ const generateTableAction = ({ rowsAmount, colsAmount, data = [], validateOnly =
   const { rowsMax, colsMax } = table;
   const { errors } = ui;
 
-  if (data.length === 0 && rowsAmount > rowsMax) {
+  const importDataIsEmpty: boolean = data.length === 0;
+
+  if (importDataIsEmpty && rowsAmount > rowsMax) {
     dispatch({
       type: UiEnum.SET_ERROR,
       payload: {[ErrorKeysEnum.GENERATE_TABLE_ROWS_MAX_ERROR]: `Rows range exceeded: 1-${rowsMax}`}
     });
-  } else if (data.length === 0 && (rowsAmount <= rowsMax && errors[ErrorKeysEnum.GENERATE_TABLE_ROWS_MAX_ERROR])) {
+  } else if (importDataIsEmpty && (rowsAmount <= rowsMax && errors[ErrorKeysEnum.GENERATE_TABLE_ROWS_MAX_ERROR])) {
     dispatch({
       type: UiEnum.CLEAR_ERROR,
       payload: ErrorKeysEnum.GENERATE_TABLE_ROWS_MAX_ERROR
     });
   }
 
-  if (data.length === 0 && colsAmount > colsMax) {
+  if (importDataIsEmpty && colsAmount > colsMax) {
     dispatch({
       type: UiEnum.SET_ERROR,
       payload: {[ErrorKeysEnum.GENERATE_TABLE_COLS_MAX_ERROR]: `Rows range exceeded: 1-${colsMax}`}
     });
-  } else if (data.length === 0 && (colsAmount <= colsMax && errors[ErrorKeysEnum.GENERATE_TABLE_COLS_MAX_ERROR])) {
+  } else if (importDataIsEmpty && (colsAmount <= colsMax && errors[ErrorKeysEnum.GENERATE_TABLE_COLS_MAX_ERROR])) {
     dispatch({
       type: UiEnum.CLEAR_ERROR,
       payload: ErrorKeysEnum.GENERATE_TABLE_COLS_MAX_ERROR
@@ -75,9 +71,9 @@ const generateTableAction = ({ rowsAmount, colsAmount, data = [], validateOnly =
   const errorsStateAfterValidaiton = getState().ui.errors;
 
   if (
-    !validateOnly && !errorsStateAfterValidaiton[ErrorKeysEnum.GENERATE_TABLE_ROWS_MAX_ERROR] 
-      && 
-    !errorsStateAfterValidaiton[ErrorKeysEnum.GENERATE_TABLE_COLS_MAX_ERROR] && !errorsStateAfterValidaiton[ErrorKeysEnum.IMPORT_CSV_ERROR]
+    (!validateDataOnly && importDataIsEmpty && !errorsStateAfterValidaiton[ErrorKeysEnum.GENERATE_TABLE_ROWS_MAX_ERROR] && !errorsStateAfterValidaiton[ErrorKeysEnum.GENERATE_TABLE_COLS_MAX_ERROR])
+      ||
+    (!validateDataOnly && !importDataIsEmpty && !errorsStateAfterValidaiton[ErrorKeysEnum.IMPORT_CSV_ERROR])
   ) {
 
     let rows: CellModel[][] = [];

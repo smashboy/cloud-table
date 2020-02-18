@@ -4,11 +4,13 @@ import { Dispatch } from 'redux';
 import { ErrorKeysEnum, UiEnum, LoadingKeysEnum } from '../../enums';
 import generateTableAction from './generateTableAction';
 import { storeStateType } from '../../store';
-import { DispactchErrorInterface, DispactchErrorClearInterface, DispatchLoadingInterface, } from '../../interfaces';
-import { MyThunkDispatchType } from '../../types';
+import { DispactchErrorType, DispactchErrorClearType, DispatchLoadingType, DispatchLoadingClearType, } from '../../types';
+import { MyThunkDispatchType, MyThunkResultType } from '../../types';
 
-const importCsvAction = (file: File) => (dispatch: Dispatch<DispactchErrorInterface | DispactchErrorClearInterface | DispatchLoadingInterface> & MyThunkDispatchType, getState: () => storeStateType): Promise<void | boolean> => {
-  return new Promise<void | boolean>((resolve, reject) => {
+type DispatchPropType = Dispatch<DispactchErrorType | DispactchErrorClearType | DispatchLoadingType | DispatchLoadingClearType> & MyThunkDispatchType;
+
+const importCsvAction = (file: File): MyThunkResultType<Promise<boolean>> => (dispatch: DispatchPropType, getState: () => storeStateType) => {
+  return new Promise<boolean>((resolve, reject) => {
 
     const fileExtension = file.name.substr(file.name.lastIndexOf('.') + 1).toLowerCase();
 
@@ -52,7 +54,7 @@ const importCsvAction = (file: File) => (dispatch: Dispatch<DispactchErrorInterf
 
       const errors = getState().ui.errors;
 
-      CsvParse(validCsvDataSplit, parseConfig, (err: any, output: any) => {
+      CsvParse(validCsvDataSplit, parseConfig, (err: any, output: string[][]) => {
 
         if (err) {
           dispatch({
@@ -75,7 +77,7 @@ const importCsvAction = (file: File) => (dispatch: Dispatch<DispactchErrorInterf
           const success = dispatch(generateTableAction({ rowsAmount, colsAmount, data: output }));
           resolve(success);
         } else {
-          resolve();
+          resolve(false);
         }
       });
     }

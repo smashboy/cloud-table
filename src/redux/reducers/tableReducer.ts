@@ -1,5 +1,4 @@
 import { TableEnum } from '../enums';
-
 import { TableHistoryStateInterface } from '../interfaces';
 import TableModel from '../../../models/Table/Table';
 import CellModel from '../../../models/Table/Cell';
@@ -20,15 +19,15 @@ const initialState: TableHistoryStateInterface = {
 }
 
 interface TableHistoryManagerPropsInterface {
-  currentTableIndex: number,
-  tableData: TableModel,
-  history: TableModel[],
-  historyLimit: number
+  currentTableIndex: number;
+  tableData: TableModel;
+  history: TableModel[];
+  historyLimit: number;
 }
 
 interface TableHistoryManagerReturnInterface {
-  updatedCurrentTableIndex: number,
-  updatedTableHistory: TableModel[]
+  updatedCurrentTableIndex: number;
+  updatedTableHistory: TableModel[];
 }
 
 const tableHistoryManager = 
@@ -61,8 +60,8 @@ const tableHistoryManager =
 }
 
 interface ReducerDispatchPropsInterface {
-  type: TableEnum,
-  payload: any
+  type: TableEnum;
+  payload: any;
 }
 
 // !!! SHOULD USE WHEN ALL ACTIONS AND DISPATCHES WILL BE REFACTORED !!!

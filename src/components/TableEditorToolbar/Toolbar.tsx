@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper';
 
 import GenerateTableForm  from './GenerateTableForm';
 import ImportCsvModal from './ImportCsvModal';
+import ClearTableBtn from './ClearTableBtn';
 
 const useStyles = makeStyles({
   toolbar: {
@@ -21,6 +22,7 @@ const Toolbar: React.FunctionComponent = () => {
     <Paper className={classes.toolbar} square>
       <GenerateTableForm />
       <ImportCsvModal />
+      <ClearTableBtn />
     </Paper>
   );
 }

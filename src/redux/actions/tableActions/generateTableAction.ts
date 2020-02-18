@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 
 import { storeStateType } from '../../store';
 import { CellEditModeEnum } from '../../../../models/Table/Cell';
-import { DispactchErrorInterface, DispactchErrorClearInterface, DispatchGeneratedTableInterface, GenerateTableActionPropsInterface } from '../../interfaces';
+import { DispactchErrorType, DispactchErrorClearType, DispatchGeneratedTableType, GenerateTableActionPropsType } from '../../types';
 import CellModel from '../../../../models/Table/Cell';
 import { MyThunkResultType } from '../../types';
 
@@ -17,10 +17,12 @@ import { MyThunkResultType } from '../../types';
  * cells value data. If not specified table will be created with empty cells
  * @param validateOnly (optional)
  * function will only check if params are valid and table won't be created
- */ 
+ */
 
-const generateTableAction = ({ rowsAmount, colsAmount, data = [], validateDataOnly = false }: GenerateTableActionPropsInterface): MyThunkResultType<boolean> => 
-  (dispatch: Dispatch<DispactchErrorInterface | DispactchErrorClearInterface | DispatchGeneratedTableInterface>, getState: () => storeStateType) => {
+type DispatchPropType = Dispatch<DispactchErrorType | DispactchErrorClearType | DispatchGeneratedTableType>;
+
+const generateTableAction = ({ rowsAmount, colsAmount, data = [], validateDataOnly = false }: GenerateTableActionPropsType): MyThunkResultType<boolean> => 
+  (dispatch: DispatchPropType, getState: () => storeStateType) => {
 
   const state = getState();
 

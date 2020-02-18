@@ -75,6 +75,11 @@ const ImportCsvModal: React.FunctionComponent<Props> = props => {
 
     Array.from(files).forEach((file: File) => {
       importCsvAciton(file)
+        .then((success: boolean) => {
+          if (success) {
+            modalCloseHandler();
+          }
+        });
     });
   }
 

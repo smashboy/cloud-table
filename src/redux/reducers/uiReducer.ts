@@ -1,10 +1,11 @@
 import { UiEnum } from '../enums';
+import { UiStateInterface } from '../interfaces';
 
-import { 
-  UiStateInterface, DispactchErrorInterface, 
-  DispatchLoadingInterface, ErrorInterface,
-  DispactchErrorClearInterface 
-} from '../interfaces';
+import {
+  DispactchErrorType, DispactchErrorClearType,
+  DispatchLoadingType, DispatchLoadingClearType,
+  ErrorType
+} from '../types';
 
 const initialState: UiStateInterface = {
 
@@ -16,7 +17,7 @@ const initialState: UiStateInterface = {
   errors: {}
 };
 
-type ReducerDispatchPropsType = DispactchErrorInterface & DispatchLoadingInterface & DispactchErrorClearInterface
+type ReducerDispatchPropsType = DispactchErrorType & DispactchErrorClearType & DispatchLoadingType & DispatchLoadingClearType;
 
 /**
  * 
@@ -33,7 +34,7 @@ export default (state: UiStateInterface = initialState, { type, payload }: Reduc
         ...state, 
         errors: Object.keys(state.errors)
         .filter((key: string) => key !== payload)
-        .reduce((result: ErrorInterface, current: string) => {
+        .reduce((result: ErrorType, current: string) => {
           result[current] = state.errors[current];
           return result;
         }, {})

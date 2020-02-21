@@ -6,9 +6,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
+import ImportExportIcon from '@material-ui/icons/ImportExport';
+import { Tooltip } from '@material-ui/core';
 
 import { storeStateType } from '../../redux/store';
-import importCsvAciton from '../../redux/actions/tableActions/importCsvAction';
+import importCsvAciton from '../../redux/actions/editorActions/importCsvAction';
 import { LoadingKeysEnum, ErrorKeysEnum } from '../../redux/enums';
 
 type Props = ConnectedProps<typeof connectToRedux>;
@@ -21,7 +23,7 @@ const useStyles = makeStyles({
     position: 'relative',
     overflow: 'hidden',
     padding: 10,
-    border: '1px solid #3f51b5',
+    border: '1px dotted #3f51b5',
     borderRadius: 5,
     height: 250,
     display: 'block'
@@ -85,7 +87,9 @@ const ImportCsvModal: React.FunctionComponent<Props> = props => {
 
   return (
     <React.Fragment>
-      <Button onClick={modalOpenHandler}>Import CSV</Button>
+      <Tooltip title='Import CSV File' arrow>
+        <Button onClick={modalOpenHandler} startIcon={<ImportExportIcon />}>Import CSV</Button>
+      </Tooltip>
       <Dialog 
         open={modalState} 
         onClose={modalCloseHandler} 

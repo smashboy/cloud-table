@@ -1,7 +1,7 @@
 import { TableEnum } from '../enums';
 import { TableHistoryStateInterface } from '../interfaces';
 import TableModel from '../../../models/Table/Table';
-import CellModel from '../../../models/Table/Cell';
+import CellModel, { CellEditModeEnum } from '../../../models/Table/Cell';
 
 const initialState: TableHistoryStateInterface = {
 
@@ -15,6 +15,9 @@ const initialState: TableHistoryStateInterface = {
 
   currentTableIndex: 0,
 
+  // Cell that is currently in edit mode 
+  editableCell: null,
+
   history: [],
 }
 
@@ -23,6 +26,7 @@ interface TableHistoryManagerPropsInterface {
   tableData: TableModel;
   history: TableModel[];
   historyLimit: number;
+  updateHistory?: boolean // should we add new table version or edit selected one
 }
 
 interface TableHistoryManagerReturnInterface {
@@ -31,10 +35,11 @@ interface TableHistoryManagerReturnInterface {
 }
 
 const tableHistoryManager = 
-  ({ currentTableIndex, tableData, history, historyLimit }: TableHistoryManagerPropsInterface): TableHistoryManagerReturnInterface => {
+  ({ currentTableIndex, tableData, history, historyLimit, updateHistory = true }: TableHistoryManagerPropsInterface): TableHistoryManagerReturnInterface => {
 
   let updatedTableHistory: TableModel[] = [];
   let arrayShift: boolean = false;
+  let updatedCurrentTableIndex: number;
 
   // Init setup
   if (history.length === 0) {
@@ -50,13 +55,20 @@ const tableHistoryManager =
 
   const limitChecker: number = arrayShift ? history.length : history.length - 1;
 
-  updatedTableHistory = currentTableIndex < limitChecker 
+  // When cell edit mode changes, we should not add new table to history
+  if (updateHistory) {
+    updatedTableHistory = currentTableIndex < limitChecker 
       ? 
     [...history.slice(0, currentTableIndex + 1), tableData] 
       :
-    [...history, tableData];
+    [...history, tableData]; 
+    updatedCurrentTableIndex = updatedTableHistory.length - 1;
+  } else {
+    updatedTableHistory = history.map((oldTableData: TableModel, index: number) => currentTableIndex === index ? tableData : oldTableData);
+    updatedCurrentTableIndex = currentTableIndex;
+  }
 
-  return { updatedTableHistory, updatedCurrentTableIndex: updatedTableHistory.length - 1 };
+  return { updatedTableHistory, updatedCurrentTableIndex };
 }
 
 interface ReducerDispatchPropsInterface {
@@ -77,8 +89,38 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
       const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData: payload, history, historyLimit, currentTableIndex });
       return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
-    case TableEnum.SET_CELL_VALUE: {
+    case TableEnum.SET_EDIT_MODE_ON: {
       const { rowIndex, colIndex } = payload;
+      const { editableCell } = state;
+
+      let shouldUpdateHistory: boolean = false;
+
+      const tableData: TableModel = {
+        ...history[currentTableIndex],
+        rows: history[currentTableIndex].rows.map(row => 
+          row.map(
+            (cell: CellModel) => {
+              if (cell.rowIndex === rowIndex && cell.colIndex === colIndex) {
+                return payload;
+              } else if (editableCell !== null && (cell.rowIndex === editableCell.rowIndex && cell.colIndex === editableCell.colIndex)) {
+                shouldUpdateHistory = cell.value !== editableCell.value;
+                return { ...cell, editMode: CellEditModeEnum.EDIT_MODE_OFF, value: editableCell.value }
+              } else {
+                return { ...cell, editMode: CellEditModeEnum.EDIT_MODE_OFF }
+              }
+            }
+          )
+        )
+      };
+
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex, updateHistory: shouldUpdateHistory });
+      return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex, editableCell: payload };
+    }
+    case TableEnum.SET_EDIT_MODE_OFF: {
+      const { rowIndex, colIndex } = payload;
+      const { editableCell } = state;
+
+      const shouldUpdateHistory: boolean = history[currentTableIndex].rows[rowIndex][colIndex].value !== editableCell?.value;
 
       const tableData: TableModel = {
         ...history[currentTableIndex],
@@ -89,8 +131,14 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
         })
       };
 
-      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex });
-      return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex, updateHistory: shouldUpdateHistory });
+      return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex, editableCell: null };
+    }
+    case TableEnum.SET_CELL_DATA: {
+      const { editableCell } = state;
+
+      // @ts-ignore
+      return { ...state, editableCell: { ...editableCell, value: payload } };
     }
     case TableEnum.CLEAR_ALL_CELLS: {
       const tableData: TableModel = {
@@ -169,10 +217,25 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
       const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex });
       return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
-    case TableEnum.UNDO_TABLE:
-      return { ...state, currentTableIndex: state.currentTableIndex - 1 };
-    case TableEnum.REDO_TABLE:
-      return { ...state, currentTableIndex: state.currentTableIndex + 1 };
+    // We need to clear(cancel) all active editable cells 
+    case TableEnum.UNDO_TABLE: {
+      const newCurrentTableIndex = state.currentTableIndex - 1;
+      const updatedTableHistory = history.map((tableData: TableModel) => ({ 
+        ...tableData, 
+        rows: tableData.rows.map((row: CellModel[]) => row.map((cellData: CellModel) => ({ ...cellData, editMode: CellEditModeEnum.EDIT_MODE_OFF })))
+        })
+      );
+      return { ...state, currentTableIndex: newCurrentTableIndex, history: updatedTableHistory, editableCell: null };
+    }
+    case TableEnum.REDO_TABLE: {
+      const newCurrentTableIndex = state.currentTableIndex + 1;
+      const updatedTableHistory = history.map((tableData: TableModel) => ({ 
+        ...tableData, 
+        rows: tableData.rows.map((row: CellModel[]) => row.map((cellData: CellModel) => ({ ...cellData, editMode: CellEditModeEnum.EDIT_MODE_OFF })))
+        })
+      );
+      return { ...state, currentTableIndex: newCurrentTableIndex, history: updatedTableHistory, editableCell: null };
+    }
     default:
       return state;
   }

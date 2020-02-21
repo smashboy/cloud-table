@@ -1,34 +1,27 @@
 import { TableEnum, ErrorKeysEnum, UiEnum } from '../../enums';
-import { Dispatch } from 'redux';
 
-import { storeStateType } from '../../store';
 import { CellEditModeEnum } from '../../../../models/Table/Cell';
-import { DispactchErrorType, DispactchErrorClearType, DispatchGeneratedTableType, GenerateTableActionPropsType } from '../../types';
+import { GenerateTableActionType } from '../../types';
 import CellModel from '../../../../models/Table/Cell';
-import { MyThunkResultType } from '../../types';
 
 /**
  * Generate table action is used to validate table data or create new table structure with or without specified data 
- * @param rowsAmount
+ * @param Object.rowsAmount
  * amount of table rows. Max rows amount specified in tableReducer
- * @param colsAmount 
+ * @param Object.colsAmount 
  * amount of table cols. Max cols amount specified in tableReducer
- * @param data (optional)
+ * @param Object.data (optional)
  * cells value data. If not specified table will be created with empty cells
- * @param validateOnly (optional)
+ * @param Object.validateOnly (optional)
  * function will only check if params are valid and table won't be created
  */
-
-type DispatchPropType = Dispatch<DispactchErrorType | DispactchErrorClearType | DispatchGeneratedTableType>;
-
-const generateTableAction = ({ rowsAmount, colsAmount, data = [], validateDataOnly = false }: GenerateTableActionPropsType): MyThunkResultType<boolean> => 
-  (dispatch: DispatchPropType, getState: () => storeStateType) => {
+const generateTableAction: GenerateTableActionType = ({ rowsAmount, colsAmount, data = [], validateDataOnly = false }) => (dispatch, getState) => {
 
   const state = getState();
 
-  const { table, ui } = state;
+  const { editor, ui } = state;
 
-  const { rowsMax, colsMax } = table;
+  const { rowsMax, colsMax } = editor;
   const { errors } = ui;
 
   const importDataIsEmpty: boolean = data.length === 0;

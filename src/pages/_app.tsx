@@ -3,12 +3,12 @@ import App, { AppContext } from 'next/app';
 import Head from 'next/head';
 import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles';
 // import { ThemeProvider } from '@material-ui/styles';
-import { Provider as ReduxProvider } from 'react-redux';
-import withRedux from 'next-redux-wrapper';
-import { makeStore } from '../redux/store';
 import CssBaseline from '@material-ui/core/CssBaseline';
-// import Grid from '@material-ui/core/Grid';
+import { Provider as ReduxProvider } from 'react-redux';
 import { Store } from 'redux';
+import withRedux from 'next-redux-wrapper';
+
+import { makeStore } from '../redux/store';
 
 // import MenuAppBar from '../components/MenuApp/MenuAppBar';
 // import theme from '../themes/theme';
@@ -51,9 +51,7 @@ class AppContainer extends App<Props> {
           <StylesProvider>
             <CssBaseline />
             {/* <MenuAppBar /> */}
-            {/* <Grid container direction='row' justify='center' alignItems='center'> */}
               <Component {...pageProps} />
-            {/* </Grid> */}
           </StylesProvider>
         {/* </ThemeProvider> */}
         </ReduxProvider>

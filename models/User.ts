@@ -7,7 +7,7 @@ export default class User {
   lastName!: string;
   createdAt!: Timestamp | Date;
   emailVerified!: boolean;
-  profileViewPrivacy!: number;
+  profileViewPrivacy!: UserProfileViewPrivacyEnum;
   avatarURL!: string | null;
 
   public constructor(init?: Partial<User>) {

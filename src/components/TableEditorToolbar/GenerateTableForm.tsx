@@ -6,9 +6,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
 import { connect, ConnectedProps } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
+import AddIcon from '@material-ui/icons/Add';
+import { Tooltip } from '@material-ui/core';
 
 import { storeStateType } from '../../redux/store';
-import generateTableAction from '../../redux/actions/tableActions/generateTableAction';
+import generateTableAction from '../../redux/actions/editorActions/generateTableAction';
 import { ErrorKeysEnum } from '../../redux/enums';
 
 interface GenerateTableFormInterface {
@@ -95,7 +97,9 @@ const GenerateTableForm: React.FunctionComponent<Props> = props => {
 
   return (
     <React.Fragment>
-      <Button onClick={modalOpenHandler}>New Table</Button>
+      <Tooltip title='Create new table' arrow>
+      <Button onClick={modalOpenHandler} startIcon={<AddIcon />}>New Table</Button>
+      </Tooltip>
       <Dialog 
         open={modalState} 
         onClose={modalCloseHandler} 

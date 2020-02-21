@@ -2,23 +2,26 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import { connect, ConnectedProps } from 'react-redux';
 
-import clearTableAction from '../../redux/actions/tableActions/clearTableAction';
+import clearTableAction from '../../redux/actions/editorActions/clearTableAction';
+import { Tooltip } from '@material-ui/core';
 
 type Props = ConnectedProps<typeof connectToRedux>;
 
 const ClearTableBtn: React.FunctionComponent<Props> = props => {
 
-    const { clearTableAction } = props;
+  const { clearTableAction } = props;
 
-    return (
-        <Button onClick={clearTableAction}>
-            Clear Table
-        </Button>
-    );
+  return (
+    <Tooltip title='Clear Table Values' arrow>
+      <Button onClick={clearTableAction}>
+        Clear Table
+      </Button>
+    </Tooltip>
+);
 }
 
 const mapActionsToProps = {
-    clearTableAction
+  clearTableAction
 };
 
 const connectToRedux = connect(null, mapActionsToProps);

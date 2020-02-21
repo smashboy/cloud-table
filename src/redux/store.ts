@@ -3,13 +3,13 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { MakeStore } from 'next-redux-wrapper';
 
-import tableReducer from './reducers/tableReducer';
+import editorReducer from './reducers/editorReducer';
 import uiReducer from './reducers/uiReducer';
 
 const middleware = [thunk];
 
 const reducers = combineReducers({
-  table: tableReducer,
+  editor: editorReducer,
   ui: uiReducer
 });
 

@@ -1,15 +1,10 @@
 import CsvParse from 'csv-parse';
-import { Dispatch } from 'redux';
 
 import { ErrorKeysEnum, UiEnum, LoadingKeysEnum } from '../../enums';
 import generateTableAction from './generateTableAction';
-import { storeStateType } from '../../store';
-import { DispactchErrorType, DispactchErrorClearType, DispatchLoadingType, DispatchLoadingClearType, } from '../../types';
-import { MyThunkDispatchType, MyThunkResultType } from '../../types';
+import { ImportCsvActionType } from '../../types';
 
-type DispatchPropType = Dispatch<DispactchErrorType | DispactchErrorClearType | DispatchLoadingType | DispatchLoadingClearType> & MyThunkDispatchType;
-
-const importCsvAction = (file: File): MyThunkResultType<Promise<boolean>> => (dispatch: DispatchPropType, getState: () => storeStateType) => {
+const importCsvAction: ImportCsvActionType = (file) => (dispatch, getState) => {
   return new Promise<boolean>((resolve, reject) => {
 
     const fileExtension = file.name.substr(file.name.lastIndexOf('.') + 1).toLowerCase();

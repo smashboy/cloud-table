@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 
 import TableModel from '../../../models/Table/Table';
 import { storeStateType } from '../../redux/store';
-import generateTableAction from '../../redux/actions/tableActions/generateTableAction';
+import generateTableAction from '../../redux/actions/editorActions/generateTableAction';
 import TableView from './TalbeView';
 
 export interface RenderTableDataInterface extends TableModel {
@@ -88,8 +88,8 @@ const TableContainer: React.FunctionComponent<Props> = props => {
 }
 
 const mapStateToProps = (state: storeStateType) => ({
-  tableHistory: state.table.history,
-  currentTableIndex: state.table.currentTableIndex
+  tableHistory: state.editor.history,
+  currentTableIndex: state.editor.currentTableIndex
 });
 
 const mapActionsToProps = {

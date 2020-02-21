@@ -7,7 +7,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import ImportExportIcon from '@material-ui/icons/ImportExport';
-import { Tooltip } from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { storeStateType } from '../../redux/store';
 import importCsvAciton from '../../redux/actions/editorActions/importCsvAction';

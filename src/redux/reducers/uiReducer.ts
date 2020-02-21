@@ -17,7 +17,9 @@ const initialState: UiStateInterface = {
   errors: {}
 };
 
-type ReducerDispatchPropsType = DispactchErrorType & DispactchErrorClearType & DispatchLoadingType & DispatchLoadingClearType;
+type ReducerDispatchPropsType = 
+  DispactchErrorType & DispactchErrorClearType & 
+  DispatchLoadingType & DispatchLoadingClearType;
 
 /**
  * 

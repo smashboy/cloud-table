@@ -97,12 +97,13 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
 
       const tableData: TableModel = {
         ...history[currentTableIndex],
-        rows: history[currentTableIndex].rows.map(row => 
+        rows: history[currentTableIndex].rows.map((row: CellModel[]) => 
           row.map(
             (cell: CellModel) => {
               if (cell.rowIndex === rowIndex && cell.colIndex === colIndex) {
                 return payload;
               } else if (editableCell !== null && (cell.rowIndex === editableCell.rowIndex && cell.colIndex === editableCell.colIndex)) {
+                // turn off editMode in previous cell
                 shouldUpdateHistory = cell.value !== editableCell.value;
                 return { ...cell, editMode: CellEditModeEnum.EDIT_MODE_OFF, value: editableCell.value }
               } else {
@@ -143,7 +144,7 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
     case TableEnum.CLEAR_ALL_CELLS: {
       const tableData: TableModel = {
         ...history[currentTableIndex],
-        rows: history[currentTableIndex].rows.map(row => 
+        rows: history[currentTableIndex].rows.map((row: CellModel[]) => 
           row.map((cell: CellModel) => ({ ...cell, value: '' }))
         )
       };
@@ -161,7 +162,7 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
           ...history[currentTableIndex].rows.slice(0, rowIndex), 
           newRow,
           // Row indexes are shifting, because of new row
-          ...history[currentTableIndex].rows.slice(rowIndex).map(row => row.map((cell: CellModel) => ({...cell, rowIndex: cell.rowIndex + 1})))
+          ...history[currentTableIndex].rows.slice(rowIndex).map((row: CellModel[]) => row.map((cell: CellModel) => ({...cell, rowIndex: cell.rowIndex + 1})))
         ]
       };
 
@@ -172,7 +173,7 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
       const tableData: TableModel = {
         ...history[currentTableIndex],
         colsAmount: history[currentTableIndex].colsAmount + 1,
-        rows: history[currentTableIndex].rows.map((row, rowIndex) => [
+        rows: history[currentTableIndex].rows.map((row: CellModel[], rowIndex: number) => [
           ...row.slice(0, payload),
           {
             rowIndex: rowIndex,
@@ -193,8 +194,8 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
         ...history[currentTableIndex],
         rowsAmount: history[currentTableIndex].rowsAmount - 1,
         rows: history[currentTableIndex].rows
-          .filter(row => row[0].rowIndex !== payload)
-          .map((row, rowIndex) => 
+          .filter((row: CellModel[]) => row[0].rowIndex !== payload)
+          .map((row: CellModel[], rowIndex: number) => 
             row.map((cell: CellModel) => ({...cell, rowIndex}))
           )
       };
@@ -208,7 +209,7 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
         colsAmount:  history[currentTableIndex].colsAmount - 1,
         rows: history[currentTableIndex].rows
           .map(
-            row => row
+            (row: CellModel[]) => row
               .filter((cell: CellModel) => cell.colIndex !== payload)
               .map((cell: CellModel, colIndex: number) => ({...cell, colIndex}))
           )

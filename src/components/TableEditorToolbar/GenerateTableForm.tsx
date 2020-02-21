@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import { connect, ConnectedProps } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
-import { Tooltip } from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import { storeStateType } from '../../redux/store';
 import generateTableAction from '../../redux/actions/editorActions/generateTableAction';
@@ -137,9 +137,11 @@ const GenerateTableForm: React.FunctionComponent<Props> = props => {
             />
           </form>
           <Button 
-            variant='outlined' 
+            variant='contained' 
             fullWidth
             type='submit'
+            color='primary'
+            disableElevation
             disabled={errors[ErrorKeysEnum.GENERATE_TABLE_ROWS_MAX_ERROR] || errors[ErrorKeysEnum.GENERATE_TABLE_COLS_MAX_ERROR] ? true : false}
             onClick={submitHandler}
           >

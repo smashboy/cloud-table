@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import { connect, ConnectedProps } from 'react-redux';
 
 import clearTableAction from '../../redux/actions/editorActions/clearTableAction';
-import { Tooltip } from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
 
 type Props = ConnectedProps<typeof connectToRedux>;
 

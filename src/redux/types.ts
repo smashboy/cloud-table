@@ -14,7 +14,7 @@ export type MyThunkResultType<R> = ThunkAction<R, storeStateType, MyExtraArg, Ac
 export type MyThunkDispatchType = ThunkDispatch<storeStateType, MyExtraArg, Action>;
 
 // Thunk get global state function type
-export type getStateThunkType = () => storeStateType
+export type GetStateThunkType = () => storeStateType
 
 // Dispatches -> Editor
 export type DispatchGeneratedTableType = {
@@ -51,13 +51,13 @@ export type DispatchLoadingClearType = {
 export type GenerateTableActionType = ({}: { rowsAmount: number, colsAmount: number, data?: string[][], validateDataOnly?: boolean }) => 
   (
     dispatch: Dispatch<DispactchErrorType | DispactchErrorClearType | DispatchGeneratedTableType>, 
-    getState: getStateThunkType
+    getState: GetStateThunkType
   ) => boolean
 
 export type ImportCsvActionType = (file: File) => 
   (
     dispatch: Dispatch<DispactchErrorType | DispactchErrorClearType | DispatchLoadingType | DispatchLoadingClearType> & MyThunkDispatchType, 
-    getState: getStateThunkType
+    getState: GetStateThunkType
   ) => Promise<boolean>
   
 export type ClearTableActionType = () => (dispatch: Dispatch) => void
@@ -67,6 +67,10 @@ export type SetCellDataActionType = (cellValue: string) => (dispatch: Dispatch) 
 export type SetEditModeActionType = (cellData: CellModel) => (dispatch: Dispatch) => void
 
 export type TableHistoryActionType = (undo: boolean) => (dispatch: Dispatch) => void
+
+export type SetTableColsActionType = ({}: { colIndex: number, shouldDelete?: boolean }) => (dispatch: Dispatch, getState: GetStateThunkType) => void
+
+export type SetTableRowsActionType = ({}: { rowIndex: number, shouldDelete?: boolean }) => (dispatch: Dispatch, getState: GetStateThunkType) => void
 
 // other 
 export type ErrorType = {

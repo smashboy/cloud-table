@@ -2,11 +2,11 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 
-import CellModel, { CellEditModeEnum } from '../../../models/Table/Cell';
-import setCellDataAction from '../../redux/actions/editorActions/setCellDataAction';
-import setEditModeAction from '../../redux/actions/editorActions/setEditModeAction';
+import CellModel from '../../../models/Table/Cell';
+import setTableRowsAction from '../../redux/actions/editorActions/setTableRowsAction';
+import setTableColsAction from '../../redux/actions/editorActions/setTableColsAction';
 import ClickOutsideListener from './_ClickOutsideListener';
-import { storeStateType } from '../../redux/store';
+import CellEditModal from './CellEditModal';
 
 interface CellPropsInterface {
   styleData?: any,
@@ -15,7 +15,7 @@ interface CellPropsInterface {
   colIndex: number
 }
 
-type Props = ConnectedProps<typeof connectToRedux>;
+type ReduxProps = ConnectedProps<typeof connectToRedux>;
 
 const useStyles = makeStyles({
   gridItem: {
@@ -25,46 +25,25 @@ const useStyles = makeStyles({
     backgroundColor: '#ffffff',
     textAlign: 'center',
     cursor: 'pointer',
-    position: 'relative'
-  },
-  cellTextArea: {
-    resize: 'none',
-    width: '100%',
-    height: '100%'
+    position: 'relative',
+    '&:hover': {
+      backgroundColor: '#cccccc'
+    },
+    '&:hover button': {
+      display: 'inline-flex'
+    }
   }
 });
 
-const Cell: React.FunctionComponent<Props & CellPropsInterface> = props => {
+const Cell: React.FunctionComponent<ReduxProps & CellPropsInterface> = props => {
 
-  const { 
-    styleData, data, colIndex, rowIndex,
-    setCellDataAction, setEditModeAction, editableCell
-  } = props;
+  const { styleData, data, colIndex, rowIndex } = props;
 
-  const { value, editMode } = data[rowIndex][colIndex];
+  const { value } = data[rowIndex][colIndex];
 
   const classes = useStyles();
 
-  const inputChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => setCellDataAction(event.target.value);
-
-  const setEditModeOnHandler = () => {
-    if(editMode === CellEditModeEnum.EDIT_MODE_OFF) {
-      setEditModeAction(data[rowIndex][colIndex]); 
-    }
-  }
-
-  const setEditModeOffHandler = () => {
-    if(editMode === CellEditModeEnum.EDIT_MODE_ON) {
-      setEditModeAction({
-        ...data[rowIndex][colIndex],
-        value: editableCell?.value || ''
-      });
-    }
-  }
-
   return (
-    // @ts-ignore
-    <ClickOutsideListener onClickOut={setEditModeOffHandler}>
       <div
         style={{
           ...styleData,
@@ -74,32 +53,20 @@ const Cell: React.FunctionComponent<Props & CellPropsInterface> = props => {
           height: styleData.height - 5
         }}
         className={classes.gridItem}
-        onClick={setEditModeOnHandler}
       >
-        {
-          editMode === CellEditModeEnum.EDIT_MODE_OFF ? value 
-            : 
-          editMode === CellEditModeEnum.EDIT_MODE_ON ?
-            <React.Fragment>
-              <textarea className={classes.cellTextArea} onChange={inputChangeHandler} value={editableCell?.value} autoFocus />
-            </React.Fragment>
-            :
-          null
-        }
+        {value}
+      <CellEditModal
+        cellData={data[rowIndex][colIndex]}
+      />
       </div>
-    </ClickOutsideListener>
   );
 }
 
-const mapStateToProps = (state: storeStateType) => ({
-  editableCell: state.editor.editableCell
-})
-
 const mapActionsToProps = {
-  setCellDataAction,
-  setEditModeAction
+  setTableRowsAction,
+  setTableColsAction
 };
 
-const connectToRedux = connect(mapStateToProps, mapActionsToProps);  
+const connectToRedux = connect(null, mapActionsToProps);
 
 export default connectToRedux(Cell);

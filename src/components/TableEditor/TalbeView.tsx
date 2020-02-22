@@ -34,7 +34,7 @@ const TableView: React.FunctionComponent<TableViewPropsInterface> = props => {
           columnCount={colsAmount}
           rowCount={rowsAmount}
           width={width}
-          height={height * 12.4}
+          height={height * 10.1}
           columnWidth={index => colsMaxWidth[index] + 250}
           rowHeight={index => rowsMaxHeight[index] + 50}
           itemData={rows}

@@ -1,12 +1,9 @@
 import React from 'react';
-import { connect, ConnectedProps } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 
 import CellModel from '../../../models/Table/Cell';
-import setTableRowsAction from '../../redux/actions/editorActions/setTableRowsAction';
-import setTableColsAction from '../../redux/actions/editorActions/setTableColsAction';
-import ClickOutsideListener from './_ClickOutsideListener';
 import CellEditModal from './CellEditModal';
+import TableEditMenu from './TableEditMenu';
 
 interface CellPropsInterface {
   styleData?: any,
@@ -14,8 +11,6 @@ interface CellPropsInterface {
   rowIndex: number,
   colIndex: number
 }
-
-type ReduxProps = ConnectedProps<typeof connectToRedux>;
 
 const useStyles = makeStyles({
   gridItem: {
@@ -28,20 +23,22 @@ const useStyles = makeStyles({
     opacity: .75,
     '&:hover': {
       opacity: 1
-    },
-    '&:hover button': {
-      display: 'inline-flex'
     }
   }
 });
 
-const Cell: React.FunctionComponent<ReduxProps & CellPropsInterface> = props => {
+const Cell: React.FunctionComponent<CellPropsInterface> = props => {
 
   const { styleData, data, colIndex, rowIndex } = props;
-
   const { value, cellColor, valueColor } = data[rowIndex][colIndex];
 
   const classes = useStyles();
+
+  const [displayTools, setDisplayTools] = React.useState<boolean>(false);
+  const [continueShowTools, setContinueShowTools] = React.useState<boolean>(false);
+
+  // DONT FORGET TO CHEK THIS OUT LATER
+  // const CellEditModalMemo = React.useMemo(() =>  <CellEditModal setContinueShowTools={setContinueShowTools} cellData={data[rowIndex][colIndex]} />, [data[rowIndex][colIndex]]);
 
   return (
     <div
@@ -55,20 +52,22 @@ const Cell: React.FunctionComponent<ReduxProps & CellPropsInterface> = props => 
         color: valueColor
       }}
       className={classes.gridItem}
+      onMouseEnter={() => setDisplayTools(true)}
+      onMouseLeave={() => {
+        if (!continueShowTools) {
+          setDisplayTools(false);
+        }
+      }}
     >
       {value}
-    <CellEditModal
-      cellData={data[rowIndex][colIndex]}
-    />
+      {displayTools ? 
+        <React.Fragment>
+          <TableEditMenu cellData={data[rowIndex][colIndex]} />
+          <CellEditModal setContinueShowTools={setContinueShowTools} cellData={data[rowIndex][colIndex]} />
+        </React.Fragment> : null
+      }
     </div>
   );
-}
-
-const mapActionsToProps = {
-  setTableRowsAction,
-  setTableColsAction
 };
 
-const connectToRedux = connect(null, mapActionsToProps);
-
-export default connectToRedux(Cell);
+export default Cell;

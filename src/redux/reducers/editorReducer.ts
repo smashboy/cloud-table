@@ -108,10 +108,17 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
       return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
     case TableEnum.SET_EDIT_MODE_OFF: {
-      const { rowIndex, colIndex } = payload;
+      const { rowIndex, colIndex, value, valueColor, cellColor } = payload;
+      const oldData = history[currentTableIndex].rows[rowIndex][colIndex];
 
       // If no data has been changed, history should not be updated !!!
-      const shouldUpdateHistory = history[currentTableIndex].rows[rowIndex][colIndex] !== payload;
+      const shouldUpdateHistory = (
+        oldData.value !== value
+          ||
+        oldData.valueColor !== valueColor
+          ||
+        oldData.cellColor !== cellColor
+      );
 
       const tableData: TableModel = {
         ...history[currentTableIndex],

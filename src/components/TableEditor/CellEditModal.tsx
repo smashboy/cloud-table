@@ -4,10 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
-// import ArrowTopIcon from '@material-ui/icons/KeyboardArrowUp';
-// import ArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
-// import ArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-// import ArrowBottomIcon from '@material-ui/icons/KeyboardArrowDown';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -17,8 +13,10 @@ import Draggable from 'react-draggable';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import { CirclePicker } from 'react-color';
+import { CompactPicker } from 'react-color';
 import Menu from '@material-ui/core/Menu';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import CellModel, { CellEditModeEnum } from '../../../models/Table/Cell';
 import setEditModeAction from '../../redux/actions/editorActions/setEditModeAction';
@@ -28,23 +26,27 @@ const useStyles = makeStyles({
     textAlign: 'center',
     cursor: 'move'
   },
-  moreBtn: {
+  openModalBtn: {
     position: 'absolute',
     margin: 0,
     zIndex: 10,
-    bottom: 3,
-    right: 0,
-    display: 'none'
+    right: 25,
+    padding: 0,
+    bottom: 2,
   },
   inputColorIndicator: {
     minWidth: 30,
     minHeight: 30,
     borderRadius: '50%',
     border: '1px solid black'
+  },
+  colorSelectorMenu: {
+    boxShadow: 'none',
+    backgroundColor: 'transparent'
   }
 });
 
-const DraggableComponent: React.FunctionComponent = (props) => {
+const DraggableComponent: React.FunctionComponent = props => {
   return (
     <Draggable handle='#draggable-dialog-title' cancel={'[class*="MuiDialogContent-root"]'}>
       <Paper {...props} />
@@ -53,7 +55,8 @@ const DraggableComponent: React.FunctionComponent = (props) => {
 }
 
 interface OtherPropsInterface {
- cellData: CellModel
+ cellData: CellModel;
+ setContinueShowTools: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 type ReduxProps = ConnectedProps<typeof connectToRedux>;
@@ -61,7 +64,7 @@ type ReduxProps = ConnectedProps<typeof connectToRedux>;
 const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> = (props) => {
 
   const { 
-    cellData, setEditModeAction
+    cellData, setEditModeAction, setContinueShowTools
   } = props;
 
   const { editMode, value, rowIndex, colIndex, valueColor, cellColor } = cellData;
@@ -71,6 +74,7 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
   const [localCellDataState, setLocalCellData] = React.useState<CellModel | null>(null);
   const [valueColorMenuState, setValueColorMenu] = React.useState<null | HTMLElement>(null);
   const [cellColorMenuState, setCellColorMenu] = React.useState<null | HTMLElement>(null);
+  const [showLoaderState, setShowLoader] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (cellData.editMode === CellEditModeEnum.EDIT_MODE_ON) {
@@ -92,6 +96,7 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
       ...localCellDataState,
       valueColor: color.hex
     })
+    setValueColorMenu(null);
   }
 
   const cellColorChangeHandler = (color: any): void => {
@@ -100,10 +105,13 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
       ...localCellDataState,
       cellColor: color.hex
     })
+    setCellColorMenu(null);
   }
 
   const setEditModeOnHandler = (): void => {
     if(editMode === CellEditModeEnum.EDIT_MODE_OFF) {
+      setContinueShowTools(true);
+      setShowLoader(true);
       setEditModeAction(cellData);
     }
   }
@@ -119,133 +127,147 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
     } else if (editMode === CellEditModeEnum.EDIT_MODE_ON && !saveData) {
       setEditModeAction(cellData);
     }
+    setContinueShowTools(false);
   }
 
   return (
     <React.Fragment>
       <Tooltip title='Edit Cell' arrow>
         <IconButton
-          className={classes.moreBtn}
+          className={classes.openModalBtn}
           onClick={setEditModeOnHandler}
         >
-        <EditIcon fontSize='small' />
+          <EditIcon fontSize='small' />
         </IconButton>
       </Tooltip>
-      <Dialog
-        open={editMode === CellEditModeEnum.EDIT_MODE_ON}
-        onClose={() => setEditModeOffHandler()}
-        PaperComponent={DraggableComponent}
-        aria-labelledby='draggable-dialog-title'
-        maxWidth='sm'
-        fullWidth
-      >
-        <DialogTitle className={classes.title} id='draggable-dialog-title'>
-          Edit Cell
-        </DialogTitle>
-        <DialogContent>
-          <TextField 
-            label='Cell Value'
-            type='text'
-            margin='normal'
-            variant='outlined'
-            fullWidth 
-            multiline
-            rows='4'
-            rowsMax='6'
-            onChange={inputChangeHandler}
-            value={localCellDataState === null ? 'error' : localCellDataState.value} 
-          />
-          <Typography component='div' variant='h5'>View options:</Typography>
-          <TextField
-            label='Text Color'
-            type='text'
-            margin='normal'
-            variant='outlined'
-            fullWidth
-            disabled
-            value={localCellDataState === null ? 'error' : localCellDataState.valueColor}
-            InputProps={{
-              endAdornment: <div 
-                className={classes.inputColorIndicator} 
-                style={{
-                  backgroundColor: localCellDataState === null ? '#000000' : localCellDataState.valueColor
-                }} 
-              />
-            }}
-          />
-          <Button
-            variant='contained' 
-            aria-controls={`change-text-color-menu-${rowIndex}-${colIndex}`}
-            aria-haspopup='true'
-            disableElevation
-            onClick={(event: React.MouseEvent<HTMLButtonElement>) => setValueColorMenu(event.currentTarget)}
-          >
-            Change
-          </Button>
-          <Menu
-            id={`change-text-color-menu-${rowIndex}-${colIndex}`}
-            anchorEl={valueColorMenuState}
-            keepMounted
-            open={Boolean(valueColorMenuState)}
-            onClose={() => setValueColorMenu(null)}
-          >
-            <CirclePicker onChangeComplete={valueColorChangeHandler} />
-          </Menu>
-          <TextField
-            label='Cell Color'
-            type='text'
-            margin='normal'
-            variant='outlined'
-            fullWidth
-            disabled
-            value={localCellDataState === null ? 'error' : localCellDataState.cellColor}
-            InputProps={{
-              endAdornment: <div 
-                className={classes.inputColorIndicator} 
-                style={{
-                  backgroundColor: localCellDataState === null ? '#ffffff' : localCellDataState.cellColor
-                }} 
-              />
-            }}
-          />
-          <Button
-            variant='contained'
-            aria-controls={`change-cell-color-menu-${rowIndex}-${colIndex}`}
-            aria-haspopup='true'
-            disableElevation
-            onClick={(event: React.MouseEvent<HTMLButtonElement>) => setCellColorMenu(event.currentTarget)}
-          >
-            Change
-          </Button>
-          <Menu
-            id={`change-cell-color-menu-${rowIndex}-${colIndex}`}
-            anchorEl={cellColorMenuState}
-            keepMounted
-            open={Boolean(cellColorMenuState)}
-            onClose={() => setCellColorMenu(null)}
-          >
-            <CirclePicker onChangeComplete={cellColorChangeHandler} />
-          </Menu>
-        </DialogContent>
-        <DialogActions>
-          <Button 
-            onClick={() => setEditModeOffHandler()}
-            variant='contained'
-            color='secondary'
-            disableElevation
-          >
-            Cancel
-          </Button>
-          <Button 
-            onClick={() => setEditModeOffHandler(true)} 
-            color='primary'
-            variant='contained'
-            disableElevation
-          >
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {localCellDataState === null ?
+        <Backdrop open={showLoaderState}>
+          <CircularProgress color='inherit' />
+        </Backdrop> 
+          :
+        <Dialog
+          open={editMode === CellEditModeEnum.EDIT_MODE_ON}
+          onClose={() => setEditModeOffHandler()}
+          PaperComponent={DraggableComponent}
+          aria-labelledby='draggable-dialog-title'
+          maxWidth='sm'
+          fullWidth
+        >
+          <DialogTitle className={classes.title} id='draggable-dialog-title'>
+            Edit Cell
+          </DialogTitle>
+          <DialogContent>
+            <TextField 
+              label='Cell Value'
+              type='text'
+              margin='normal'
+              variant='outlined'
+              fullWidth 
+              multiline
+              rows='4'
+              rowsMax='6'
+              onChange={inputChangeHandler}
+              value={localCellDataState === null ? 'error' : localCellDataState.value} 
+            />
+            <Typography component='div' variant='h5'>View options:</Typography>
+            <TextField
+              label='Text Color'
+              type='text'
+              margin='normal'
+              variant='outlined'
+              fullWidth
+              disabled
+              value={localCellDataState === null ? 'error' : localCellDataState.valueColor}
+              InputProps={{
+                endAdornment: <div 
+                  className={classes.inputColorIndicator} 
+                  style={{
+                    backgroundColor: localCellDataState === null ? '#000000' : localCellDataState.valueColor
+                  }} 
+                />
+              }}
+            />
+            <Button
+              variant='contained' 
+              aria-controls={`change-text-color-menu-${rowIndex}-${colIndex}`}
+              aria-haspopup='true'
+              disableElevation
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => setValueColorMenu(event.currentTarget)}
+            >
+              Change
+            </Button>
+            <Menu
+              id={`change-text-color-menu-${rowIndex}-${colIndex}`}
+              anchorEl={valueColorMenuState}
+              keepMounted
+              className={classes.colorSelectorMenu}
+              open={Boolean(valueColorMenuState)}
+              classes={{
+                paper: classes.colorSelectorMenu
+              }}
+              onClose={() => setValueColorMenu(null)}
+            >
+              <CompactPicker onChangeComplete={valueColorChangeHandler} />
+            </Menu>
+            <TextField
+              label='Cell Color'
+              type='text'
+              margin='normal'
+              variant='outlined'
+              fullWidth
+              disabled
+              value={localCellDataState === null ? 'error' : localCellDataState.cellColor}
+              InputProps={{
+                endAdornment: <div 
+                  className={classes.inputColorIndicator} 
+                  style={{
+                    backgroundColor: localCellDataState === null ? '#ffffff' : localCellDataState.cellColor
+                  }} 
+                />
+              }}
+            />
+            <Button
+              variant='contained'
+              aria-controls={`change-cell-color-menu-${rowIndex}-${colIndex}`}
+              aria-haspopup='true'
+              disableElevation
+              onClick={(event: React.MouseEvent<HTMLButtonElement>) => setCellColorMenu(event.currentTarget)}
+            >
+              Change
+            </Button>
+            <Menu
+              id={`change-cell-color-menu-${rowIndex}-${colIndex}`}
+              anchorEl={cellColorMenuState}
+              keepMounted
+              classes={{
+                paper: classes.colorSelectorMenu
+              }}
+              open={Boolean(cellColorMenuState)}
+              onClose={() => setCellColorMenu(null)}
+            >
+              <CompactPicker onChangeComplete={cellColorChangeHandler} />
+            </Menu>
+          </DialogContent>
+          <DialogActions>
+            <Button 
+              onClick={() => setEditModeOffHandler()}
+              variant='contained'
+              color='secondary'
+              disableElevation
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={() => setEditModeOffHandler(true)} 
+              color='primary'
+              variant='contained'
+              disableElevation
+            >
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+      }
     </React.Fragment>
   );
 }

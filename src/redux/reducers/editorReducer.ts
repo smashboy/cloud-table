@@ -132,6 +132,17 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
       const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex, updateHistory: shouldUpdateHistory });
       return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
+    case TableEnum.CLEAR_ALL_CELLS: {
+      const tableData: TableModel = {
+        ...history[currentTableIndex],
+        rows: history[currentTableIndex].rows.map((row: CellModel[]) => 
+          row.map((cell: CellModel) => ({ ...cell, value: '' }))
+        )
+      };
+
+      const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex });
+      return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
+    }
     case TableEnum.ADD_ROW: {
       const { rowIndex, newRow } = payload;
 

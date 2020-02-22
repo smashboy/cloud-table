@@ -137,13 +137,19 @@ const TableEditMenu: React.FunctionComponent<ReduxProps &  OtherPropsInterface> 
           </ListItemIcon>
           <ListItemText primary='Add column to left' />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => {
+           menuCloseHandler();
+           setTableRowsAction({ rowIndex, shouldDelete: true });
+        }}>
           <ListItemIcon>
             <DeleteIcon className={classes.deleteBtnIcon} />
           </ListItemIcon>
           <ListItemText primary='Delete row' />
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => {
+          menuCloseHandler();
+          setTableColsAction({ colIndex, shouldDelete: true })
+        }}>
           <ListItemIcon>
             <DeleteIcon className={classes.deleteBtnIcon} />
           </ListItemIcon>

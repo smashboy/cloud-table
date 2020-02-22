@@ -38,7 +38,7 @@ const useStyles = makeStyles({
     minWidth: 30,
     minHeight: 30,
     borderRadius: '50%',
-    border: '1px solid black'
+    border: '1px solid #bfbfbf'
   },
   colorSelectorMenu: {
     boxShadow: 'none',

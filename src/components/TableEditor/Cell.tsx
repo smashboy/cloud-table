@@ -22,12 +22,12 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ffffff',
     textAlign: 'center',
     cursor: 'pointer',
     position: 'relative',
+    opacity: .75,
     '&:hover': {
-      backgroundColor: '#cccccc'
+      opacity: 1
     },
     '&:hover button': {
       display: 'inline-flex'
@@ -39,26 +39,28 @@ const Cell: React.FunctionComponent<ReduxProps & CellPropsInterface> = props => 
 
   const { styleData, data, colIndex, rowIndex } = props;
 
-  const { value } = data[rowIndex][colIndex];
+  const { value, cellColor, valueColor } = data[rowIndex][colIndex];
 
   const classes = useStyles();
 
   return (
-      <div
-        style={{
-          ...styleData,
-          left: styleData.left + 5,
-          top: styleData.top + 5,
-          width: styleData.width - 5,
-          height: styleData.height - 5
-        }}
-        className={classes.gridItem}
-      >
-        {value}
-      <CellEditModal
-        cellData={data[rowIndex][colIndex]}
-      />
-      </div>
+    <div
+      style={{
+        ...styleData,
+        left: styleData.left + 5,
+        top: styleData.top + 5,
+        width: styleData.width - 5,
+        height: styleData.height - 5,
+        backgroundColor: cellColor,
+        color: valueColor
+      }}
+      className={classes.gridItem}
+    >
+      {value}
+    <CellEditModal
+      cellData={data[rowIndex][colIndex]}
+    />
+    </div>
   );
 }
 

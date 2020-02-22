@@ -2,6 +2,8 @@ export default class Cell {
   rowIndex!: number;
   colIndex!: number;
   value!: string;
+  valueColor!: string;
+  cellColor!: string;
   editMode!: CellEditModeEnum;
 
   public constructor(init?: Partial<Cell>) {

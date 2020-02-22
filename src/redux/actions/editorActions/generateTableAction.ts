@@ -81,7 +81,9 @@ const generateTableAction: GenerateTableActionType = ({ rowsAmount, colsAmount, 
           rowIndex: i,
           colIndex: j,
           value: data.length > 0 ? data[i][j].replace('Â', '') : '', // Didn't find better fix for Â symbol then just replacing it,
-          editMode: CellEditModeEnum.EDIT_MODE_OFF
+          editMode: CellEditModeEnum.EDIT_MODE_OFF,
+          valueColor: '#000000',
+          cellColor: '#ffffff'
         });
       }
     }

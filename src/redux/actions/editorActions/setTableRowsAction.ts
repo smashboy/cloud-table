@@ -28,7 +28,9 @@ const setTableRowsAction: SetTableRowsActionType = ({ rowIndex, shouldDelete = f
       rowIndex: rowIndex,
       colIndex: i,
       value: '',
-      editMode: CellEditModeEnum.EDIT_MODE_OFF
+      editMode: CellEditModeEnum.EDIT_MODE_OFF,
+      valueColor: '#000000',
+      cellColor: '#ffffff'
     });
   }
 

@@ -62,8 +62,6 @@ export type ImportCsvActionType = (file: File) =>
   
 export type ClearTableActionType = () => (dispatch: Dispatch) => void
 
-export type SetCellDataActionType = (cellValue: string) => (dispatch: Dispatch) => void
-
 export type SetEditModeActionType = (cellData: CellModel) => (dispatch: Dispatch) => void
 
 export type TableHistoryActionType = (undo: boolean) => (dispatch: Dispatch) => void

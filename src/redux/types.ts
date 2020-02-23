@@ -52,7 +52,7 @@ export type DispatchLoadingClearType = {
   payload: LoadingKeysEnum
 }
 
-//Actions
+// Actions -> Editor
 export type GenerateTableActionType = ({}: { rowsAmount: number, colsAmount: number, data?: string[][], validateDataOnly?: boolean }) => 
   (
     dispatch: Dispatch<DispactchErrorType | DispactchErrorClearType | DispatchGeneratedTableType>, 

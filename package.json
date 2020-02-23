@@ -1,7 +1,15 @@
 {
   "name": "cloud-table",
   "version": "0.1.0",
-  "private": true,
+  "author": "https://github.com/smashboy",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smashboy/cloud-table.git"
+  },
+  "bugs": {
+    "url": "https://github.com/smashboy/cloud-table/issues"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,7 +20,6 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/styles": "^4.9.0",
     "csv-parse": "^4.8.5",
-    "firebase": "^7.8.1",
     "next": "9.2.1",
     "next-redux-wrapper": "^4.0.1",
     "react": "16.12.0",

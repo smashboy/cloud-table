@@ -1,4 +1,4 @@
-# Table Genarator App (React/Redux)
+# Table Genarator App (React/Redux)(Deprecated)
 
 ### Завдання: 
 Створити генератор таблиць за допомогою веб-технологій (ReactJS, Redux) з подальшим інтегруванням різних інструментів.

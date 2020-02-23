@@ -5,13 +5,17 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
 import { connect, ConnectedProps } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import Tooltip from '@material-ui/core/Tooltip';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 
 import { storeStateType } from '../../redux/store';
 import generateTableAction from '../../redux/actions/editorActions/generateTableAction';
 import { ErrorKeysEnum } from '../../redux/enums';
+import useMounted from '../../customHooks/useMounted';
 
 interface GenerateTableFormInterface {
   rowsInput: number,
@@ -20,17 +24,28 @@ interface GenerateTableFormInterface {
 
 type Props = ConnectedProps<typeof connectToRedux>;
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => createStyles({
   title: {
     textAlign: 'center'
+  },
+  mobileCloseModalBtn: {
+    display: 'none',
+    [theme.breakpoints.down('xs')]: {
+      display: 'inline-flex',
+      position: 'absolute',
+      right: theme.spacing(1),
+      top: theme.spacing(1),
+      color: theme.palette.grey[500]
+    }
   }
-});
+}));
 
 const GenerateTableForm: React.FunctionComponent<Props> = props => {
 
   const { generateTableAction, errors } = props;
 
   const classes = useStyles();
+  const isMounted = useMounted();
 
   // For inputs values we don't need redux, 
   // because we don't use inputs data outside this component
@@ -39,7 +54,6 @@ const GenerateTableForm: React.FunctionComponent<Props> = props => {
     rowsInput: 5,
     colsInput: 5
   });
-
   const [modalState, setModal] = React.useState<boolean>(false);
 
   const { rowsInput, colsInput } = inputState;
@@ -105,9 +119,15 @@ const GenerateTableForm: React.FunctionComponent<Props> = props => {
         onClose={modalCloseHandler} 
         aria-labelledby='create-table-dialog-title'
         maxWidth='sm'
+        fullScreen={isMounted ? window.screen.width < 600 : false}
         fullWidth
       >
-        <DialogTitle id='create-table-dialog-title' className={classes.title}>Create New Table</DialogTitle>
+        <DialogTitle id='create-table-dialog-title' className={classes.title}>
+          <Typography component='div' variant='h6'>Create New Table</Typography>
+          <IconButton aria-label='close-modal' className={classes.mobileCloseModalBtn} onClick={modalCloseHandler}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <DialogContent>
           <form noValidate autoComplete='off'>
             <TextField

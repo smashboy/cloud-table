@@ -1,7 +1,7 @@
 import React from 'react'
 import { VariableSizeGrid as Grid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 import { RenderTableDataInterface } from './TableContainer';
 import Cell from './Cell';
@@ -10,11 +10,15 @@ interface TableViewPropsInterface {
   data: RenderTableDataInterface
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => createStyles({
   grid: {
-    backgroundColor: '#eeeeee'
+    marginTop: 70,
+    maxHeight: '90vh',
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 105
+    }
   }
-});
+}));
 
 const TableView: React.FunctionComponent<TableViewPropsInterface> = props => {
 
@@ -34,12 +38,18 @@ const TableView: React.FunctionComponent<TableViewPropsInterface> = props => {
           columnCount={colsAmount}
           rowCount={rowsAmount}
           width={width}
-          height={height * 10.1}
-          columnWidth={index => colsMaxWidth[index] + 250}
-          rowHeight={index => rowsMaxHeight[index] + 50}
+          height={height * 125}
+          columnWidth={index => {
+            const columnWidth = colsMaxWidth[index] + 250;
+            return columnWidth < 256 ? columnWidth : 255;
+          }}
+          rowHeight={index => {
+            const rowHeight = rowsMaxHeight[index] + 50;
+            return rowHeight < 410 ? rowHeight : 409;
+          }}
           itemData={rows}
         >
-          {({style, data, rowIndex, columnIndex}) => <Cell styleData={style} data={data} rowIndex={rowIndex} colIndex={columnIndex} />}
+          {({style, data, rowIndex, columnIndex}) => <Cell styleData={style} data={data[rowIndex][columnIndex]} />}
         </Grid>
       )}
     </AutoSizer>

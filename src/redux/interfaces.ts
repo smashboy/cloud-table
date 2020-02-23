@@ -5,6 +5,7 @@ import { ErrorType } from './types';
 export interface TableHistoryStateInterface extends TableHistoryModel {
   colsMax: number;
   rowsMax: number;
+  editModeIndex: { rowIndex: number, colIndex: number } | null;
 }
 
 export interface UiStateInterface {

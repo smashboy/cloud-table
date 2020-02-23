@@ -21,6 +21,11 @@ export type DispatchGeneratedTableType = {
   type: TableEnum.SET_GENERATED_TABLE,
   payload: TableModel
 }
+
+export type DispatchEditModeType = {
+  type: TableEnum.SET_EDIT_MODE_ON | TableEnum.SET_EDIT_MODE_OFF,
+  payload: CellModel
+}
   
 export type DispatchClearTableType = {
   type: TableEnum.CLEAR_ALL_CELLS
@@ -62,7 +67,9 @@ export type ImportCsvActionType = (file: File) =>
   
 export type ClearTableActionType = () => (dispatch: Dispatch) => void
 
-export type SetEditModeActionType = (cellData: CellModel) => (dispatch: Dispatch) => void
+export type SetEditModeActionType = (cellData: CellModel) => (dispatch: Dispatch<DispatchEditModeType> & MyThunkDispatchType) => void
+
+export type SetEditModalLoaderActionType = (turnOn: boolean) => (dispatch: Dispatch<DispatchLoadingType | DispatchLoadingClearType>, getState: GetStateThunkType) => void
 
 export type TableHistoryActionType = (undo: boolean) => (dispatch: Dispatch) => void
 

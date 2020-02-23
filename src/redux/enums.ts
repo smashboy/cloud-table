@@ -42,6 +42,8 @@ export enum ErrorKeysEnum {
 
 export enum LoadingKeysEnum {
 
-  IMPORT_CSV_LOADING = 'IMPORT_CSV_LOADING'
+  IMPORT_CSV_LOADING = 'IMPORT_CSV_LOADING',
+
+  CELL_EDIT_MODAL_LOADING = 'CELL_EDIT_MODAL_LOADING'
 
 }

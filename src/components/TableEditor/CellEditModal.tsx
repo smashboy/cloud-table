@@ -15,11 +15,11 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { CompactPicker } from 'react-color';
 import Menu from '@material-ui/core/Menu';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 import CellModel, { CellEditModeEnum } from '../../../models/Table/Cell';
 import setEditModeAction from '../../redux/actions/editorActions/setEditModeAction';
+import setEditModalLoaderAcion from '../../redux/actions/editorActions/setEditModalLoaderAction';
+import useMounted from '../../customHooks/useMounted';
 
 const useStyles = makeStyles({
   title: {
@@ -56,7 +56,6 @@ const DraggableComponent: React.FunctionComponent = props => {
 
 interface OtherPropsInterface {
  cellData: CellModel;
- setContinueShowTools: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 type ReduxProps = ConnectedProps<typeof connectToRedux>;
@@ -64,21 +63,23 @@ type ReduxProps = ConnectedProps<typeof connectToRedux>;
 const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> = (props) => {
 
   const { 
-    cellData, setEditModeAction, setContinueShowTools
+    cellData, setEditModeAction, 
+    setEditModalLoaderAcion
   } = props;
 
   const { editMode, value, rowIndex, colIndex, valueColor, cellColor } = cellData;
 
   const classes = useStyles();
+  const isMounted = useMounted();
 
   const [localCellDataState, setLocalCellData] = React.useState<CellModel | null>(null);
-  const [valueColorMenuState, setValueColorMenu] = React.useState<null | HTMLElement>(null);
-  const [cellColorMenuState, setCellColorMenu] = React.useState<null | HTMLElement>(null);
-  const [showLoaderState, setShowLoader] = React.useState<boolean>(false);
+  const [valueColorMenuState, setValueColorMenu] = React.useState<HTMLElement | null>(null);
+  const [cellColorMenuState, setCellColorMenu] = React.useState<HTMLElement | null>(null);
 
   React.useEffect(() => {
     if (cellData.editMode === CellEditModeEnum.EDIT_MODE_ON) {
       setLocalCellData(cellData);
+      setEditModalLoaderAcion(false);
     }
   }, [cellData]);
 
@@ -110,24 +111,21 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
 
   const setEditModeOnHandler = (): void => {
     if(editMode === CellEditModeEnum.EDIT_MODE_OFF) {
-      setContinueShowTools(true);
-      setShowLoader(true);
       setEditModeAction(cellData);
     }
   }
 
   const setEditModeOffHandler = (saveData?: boolean): void => {
-    if(editMode === CellEditModeEnum.EDIT_MODE_ON && saveData) {
+    if(localCellDataState !== null && editMode === CellEditModeEnum.EDIT_MODE_ON && saveData) {
       setEditModeAction({
         ...cellData,
-        value: localCellDataState === null ? value : localCellDataState.value.trim(),
-        valueColor: localCellDataState === null ? valueColor : localCellDataState.valueColor,
-        cellColor: localCellDataState === null ? cellColor : localCellDataState.cellColor
+        value: localCellDataState.value.trim(),
+        valueColor: localCellDataState.valueColor,
+        cellColor: localCellDataState.cellColor
       });
     } else if (editMode === CellEditModeEnum.EDIT_MODE_ON && !saveData) {
       setEditModeAction(cellData);
     }
-    setContinueShowTools(false);
   }
 
   return (
@@ -140,15 +138,11 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
           <EditIcon fontSize='small' />
         </IconButton>
       </Tooltip>
-      {localCellDataState === null ?
-        <Backdrop open={showLoaderState}>
-          <CircularProgress color='inherit' />
-        </Backdrop> 
-          :
         <Dialog
+          fullScreen={isMounted ? window.screen.width < 600 : false}
           open={editMode === CellEditModeEnum.EDIT_MODE_ON}
           onClose={() => setEditModeOffHandler()}
-          PaperComponent={DraggableComponent}
+          PaperComponent={isMounted && window.screen.width < 600 ? Paper : DraggableComponent}
           aria-labelledby='draggable-dialog-title'
           maxWidth='sm'
           fullWidth
@@ -267,13 +261,13 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
             </Button>
           </DialogActions>
         </Dialog>
-      }
     </React.Fragment>
   );
 }
 
 const mapActionsToProps = {
-  setEditModeAction
+  setEditModeAction,
+  setEditModalLoaderAcion
 };
 
 const connectToRedux = connect(null, mapActionsToProps);  

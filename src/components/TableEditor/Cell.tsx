@@ -1,15 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { connect, ConnectedProps } from 'react-redux';
 
 import CellModel from '../../../models/Table/Cell';
 import CellEditModal from './CellEditModal';
 import TableEditMenu from './TableEditMenu';
+import { storeStateType } from '../../redux/store';
 
 interface CellPropsInterface {
   styleData?: any,
-  data: CellModel[][],
-  rowIndex: number,
-  colIndex: number
+  data: CellModel
 }
 
 const useStyles = makeStyles({
@@ -27,18 +27,22 @@ const useStyles = makeStyles({
   }
 });
 
-const Cell: React.FunctionComponent<CellPropsInterface> = props => {
+type ReduxProps = ConnectedProps<typeof connectToRedux>;
 
-  const { styleData, data, colIndex, rowIndex } = props;
-  const { value, cellColor, valueColor } = data[rowIndex][colIndex];
+const Cell: React.FunctionComponent<ReduxProps & CellPropsInterface> = props => {
+
+  const { styleData, data, editModeIndex } = props;
+  const { value, cellColor, valueColor, rowIndex, colIndex } = data;
 
   const classes = useStyles();
 
   const [displayTools, setDisplayTools] = React.useState<boolean>(false);
-  const [continueShowTools, setContinueShowTools] = React.useState<boolean>(false);
 
-  // DONT FORGET TO CHEK THIS OUT LATER
-  // const CellEditModalMemo = React.useMemo(() =>  <CellEditModal setContinueShowTools={setContinueShowTools} cellData={data[rowIndex][colIndex]} />, [data[rowIndex][colIndex]]);
+  React.useEffect(() => {
+    if (editModeIndex !== null && (editModeIndex.rowIndex === rowIndex && editModeIndex.colIndex === colIndex)) {
+      setDisplayTools(true);
+    }
+  });
 
   return (
     <div
@@ -52,22 +56,26 @@ const Cell: React.FunctionComponent<CellPropsInterface> = props => {
         color: valueColor
       }}
       className={classes.gridItem}
+      onTouchStart={() => setDisplayTools(true)}
+      onTouchCancel={() => setDisplayTools(false)}
       onMouseEnter={() => setDisplayTools(true)}
-      onMouseLeave={() => {
-        if (!continueShowTools) {
-          setDisplayTools(false);
-        }
-      }}
+      onMouseLeave={() => setDisplayTools(false)}
     >
       {value}
       {displayTools ? 
         <React.Fragment>
-          <TableEditMenu cellData={data[rowIndex][colIndex]} />
-          <CellEditModal setContinueShowTools={setContinueShowTools} cellData={data[rowIndex][colIndex]} />
+          <TableEditMenu cellData={data} />
+          <CellEditModal cellData={data} />
         </React.Fragment> : null
       }
     </div>
   );
 };
 
-export default Cell;
+const mapStateToProps = (state: storeStateType) => ({
+  editModeIndex: state.editor.editModeIndex
+});
+
+const connectToRedux = connect(mapStateToProps);
+
+export default connectToRedux(Cell);

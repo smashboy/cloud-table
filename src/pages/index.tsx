@@ -10,12 +10,6 @@ import { storeStateType } from '../redux/store';
 import { LoadingKeysEnum } from '../redux/enums';
 
 const useStyles = makeStyles({
-  tableEditorPageContainer: {
-    display: 'flex',
-    backgroundColor: '#eeeeee',
-    minHeight: '100vh',
-    width: '100%'
-  },
   cellEditModalLoaderContainer: {
     zIndex: 100,
     color: '#fff',
@@ -32,13 +26,16 @@ const index: React.FunctionComponent<ReduxProps> = props => {
 
   return (
     <React.Fragment>
+       <style global jsx>{`
+        body {
+          overflow: hidden;
+        }
+      `}</style>
       <Backdrop open={loading.includes(LoadingKeysEnum.CELL_EDIT_MODAL_LOADING)} className={classes.cellEditModalLoaderContainer}>
         <CircularProgress color='inherit' />
       </Backdrop>
-      <div className={classes.tableEditorPageContainer}>
-        <TableEditorToolbar />
-        <TableContainer />
-      </div>
+      <TableEditorToolbar />
+      <TableContainer />
     </React.Fragment>
   );
 }

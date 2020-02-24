@@ -1,4 +1,4 @@
-import { Timestamp } from '@firebase/firestore-types';
+// import { Timestamp } from '@firebase/firestore-types';
 
 import Cell from './Cell';
 

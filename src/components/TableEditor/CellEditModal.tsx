@@ -56,6 +56,7 @@ const DraggableComponent: React.FunctionComponent = props => {
 
 interface OtherPropsInterface {
  cellData: CellModel;
+ setDisplayTools: React.SetStateAction<any>;
 }
 
 type ReduxProps = ConnectedProps<typeof connectToRedux>;
@@ -64,10 +65,10 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
 
   const { 
     cellData, setEditModeAction, 
-    setEditModalLoaderAcion
+    setEditModalLoaderAcion, setDisplayTools
   } = props;
 
-  const { editMode, value, rowIndex, colIndex, valueColor, cellColor } = cellData;
+  const { editMode, rowIndex, colIndex } = cellData;
 
   const classes = useStyles();
   const isMounted = useMounted();
@@ -76,6 +77,7 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
   const [valueColorMenuState, setValueColorMenu] = React.useState<HTMLElement | null>(null);
   const [cellColorMenuState, setCellColorMenu] = React.useState<HTMLElement | null>(null);
 
+  // SET local state data, when edit mode is turned on in redux store
   React.useEffect(() => {
     if (cellData.editMode === CellEditModeEnum.EDIT_MODE_ON) {
       setLocalCellData(cellData);
@@ -115,7 +117,9 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
     }
   }
 
+  // If user don't want to update table, old data should be passed
   const setEditModeOffHandler = (saveData?: boolean): void => {
+    setDisplayTools(false);
     if(localCellDataState !== null && editMode === CellEditModeEnum.EDIT_MODE_ON && saveData) {
       setEditModeAction({
         ...cellData,

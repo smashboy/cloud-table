@@ -9,6 +9,7 @@ const setEditModeAction: SetEditModeActionType = (cellData) => (dispatch) => {
     dispatch(setEdiModalLoaderAction(true)); 
   }
 
+  // RXJS incoming
   setTimeout(() => {
     dispatch({
       type: cellData.editMode === CellEditModeEnum.EDIT_MODE_OFF ? TableEnum.SET_EDIT_MODE_ON : TableEnum.SET_EDIT_MODE_OFF,

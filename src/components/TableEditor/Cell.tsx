@@ -3,6 +3,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect, ConnectedProps } from 'react-redux';
 import TableCell from '@material-ui/core/TableCell';
+import clsx from 'clsx';
 
 import CellModel from '../../../models/Table/Cell';
 import CellEditModal from './CellEditModal';
@@ -11,19 +12,28 @@ import { storeStateType } from '../../redux/store';
 
 interface CellPropsInterface {
   data: CellModel;
+  cellWidth: number;
+  cellHeight: number;
 }
 
 const useStyles = makeStyles({
-  gridItem: {
+  cell: {
     cursor: 'pointer',
     position: 'relative',
-    minWidth: 50,
+    minWidth: 100,
     minHeight: 50,
+    display: 'block',
+    flexGrow: 0,
+    flexShrink: 0,
     border: '1px solid rgba(224, 224, 224, 1)',
     opacity: .75,
     '&:hover': {
       opacity: 1
     }
+  },
+  column: {},
+  expandingCell: {
+    flex: 1
   }
 });
 
@@ -31,7 +41,7 @@ type ReduxProps = ConnectedProps<typeof connectToRedux>;
 
 const Cell: React.FunctionComponent<ReduxProps & CellPropsInterface> = props => {
 
-  const { data, editModeIndex } = props;
+  const { data, editModeIndex, cellWidth, cellHeight } = props;
   const { value, cellColor, valueColor, rowIndex, colIndex } = data;
 
   const classes = useStyles();
@@ -49,9 +59,15 @@ const Cell: React.FunctionComponent<ReduxProps & CellPropsInterface> = props => 
       component='div'
       style={{
         backgroundColor: cellColor,
-        color: valueColor
+        color: valueColor,
+        flexBasis: Math.round(cellWidth + 50) || '',
+        height: cellHeight + 50
       }}
-      className={classes.gridItem}
+      className={clsx(
+        classes.cell,
+        classes.column,
+        cellWidth && classes.expandingCell
+      )}
       onTouchStart={() => setDisplayTools(true)}
       onTouchCancel={() => setDisplayTools(false)}
       onMouseEnter={() => setDisplayTools(true)}

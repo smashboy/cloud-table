@@ -7,7 +7,7 @@ const initialState: TableHistoryStateInterface = {
 
    // Table limits
    colsMax: 20,
-   rowsMax: 10000, // table now can hold large amount of data
+   rowsMax: 20000, // table now can hold large amount of data
    
   // Using this limit to avoid a lot of unnecessary information
   // if history limit is reached, first element  will be removed

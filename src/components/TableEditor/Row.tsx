@@ -26,7 +26,7 @@ interface RowPropsInterface {
 const Row: React.FunctionComponent<RowPropsInterface> = props => {
 
   const { styleData, data, rowIndex } = props;
-  const { rows, colsMaxWidth, rowsMaxHeight } = data;
+  const { rows, colsMaxWidth } = data;
 
   const classes = useStyles();
 
@@ -39,7 +39,7 @@ const Row: React.FunctionComponent<RowPropsInterface> = props => {
       style={styleData}
     >
       {rowData.map((cellData, cellIndex) =>(
-        <Cell key={rowIndex + cellIndex} data={cellData} cellWidth={colsMaxWidth[cellIndex]} cellHeight={rowsMaxHeight[rowIndex]} />
+        <Cell key={rowIndex + cellIndex} data={cellData} cellWidth={colsMaxWidth[cellIndex]} />
       ))}
     </TableRow>
   );

@@ -39,7 +39,7 @@ const TableView: React.FunctionComponent<TableViewPropsInterface> = props => {
 
   const [listRefState, setListRef] = React.useState<any | null>(null);
 
-  const getRowsHeigth = (index: number):number => rowsMaxHeight[index] + 50
+  const getRowsHeigth = (index: number):number => rowsMaxHeight[index] < 200 ?  rowsMaxHeight[index] + 50 : 200
 
   const listRefHandler = (ref: any) => {
     setListRef(ref);

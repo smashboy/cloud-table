@@ -11,9 +11,9 @@ import CellModel from '../../../../models/Table/Cell';
  * @param Object.colsAmount 
  * amount of table cols. Max cols amount specified in tableReducer
  * @param Object.data (optional)
- * cells value data. If not specified table will be created with empty cells
+ * cells value data. If not specified table will be created with empty cells. Default value = []
  * @param Object.validateOnly (optional)
- * function will only check if params are valid and table won't be created
+ * function will only check if params are valid and table won't be created. Default value = false
  */
 const generateTableAction: GenerateTableActionType = ({ rowsAmount, colsAmount, data = [], validateDataOnly = false }) => (dispatch, getState) => {
 

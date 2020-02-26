@@ -12,13 +12,13 @@ const useStyles = makeStyles({
   cell: {
     cursor: 'pointer',
     position: 'relative',
-    minWidth: 100,
-    minHeight: 50,
     display: 'flex',
     alignItems: 'center',
     flexGrow: 0,
     flexShrink: 0,
+    height: '100%',
     border: '1px solid rgba(224, 224, 224, 1)',
+    wordBreak: 'break-all',
     opacity: .75,
     '&:hover': {
       opacity: 1
@@ -33,12 +33,11 @@ const useStyles = makeStyles({
 interface CellPropsInterface {
   data: CellModel;
   cellWidth: number;
-  cellHeight: number;
 }
 
 const Cell: React.FunctionComponent<CellPropsInterface> = props => {
 
-  const { data, cellWidth, cellHeight } = props;
+  const { data, cellWidth } = props;
   const { value, cellColor, valueColor } = data;
 
   const classes = useStyles();
@@ -51,8 +50,8 @@ const Cell: React.FunctionComponent<CellPropsInterface> = props => {
       style={{
         backgroundColor: cellColor,
         color: valueColor,
-        flexBasis: Math.round(cellWidth + 50) || '',
-        height: cellHeight + 50
+        // flexBasis: cellWidth > 0 ? Math.round(cellWidth + 100) : 100,
+        minWidth: cellWidth > 0 ? Math.round(cellWidth + 100) : 100
       }}
       className={clsx(
         classes.cell,

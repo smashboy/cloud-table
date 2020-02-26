@@ -10,10 +10,7 @@ import HistoryBtns from './HistoryBtns';
 const useStyles = makeStyles({
   toolbar: {
     padding: 10,
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
+    position: 'relative',
     zIndex: 1
   }
 });

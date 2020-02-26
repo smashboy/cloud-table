@@ -7,7 +7,7 @@ const initialState: TableHistoryStateInterface = {
 
    // Table limits
    colsMax: 20,
-   rowsMax: 20000, // table now can hold large amount of data
+   rowsMax: 10000, // table now can hold large amount of data
    
   // Using this limit to avoid a lot of unnecessary information
   // if history limit is reached, first element  will be removed
@@ -94,17 +94,11 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
 
       const tableData: TableModel = {
         ...history[currentTableIndex],
-        rows: history[currentTableIndex].rows.map((row: CellModel[]) => 
-          row.map(
-            (cell: CellModel) => {
-              if (cell.rowIndex === rowIndex && cell.colIndex === colIndex) {
-                return payload;
-              } else {
-                return { ...cell, editMode: CellEditModeEnum.EDIT_MODE_OFF }
-              }
-            }
-          )
-        )
+        rows: Object.assign([...history[currentTableIndex].rows], {
+          [rowIndex]: Object.assign([...history[currentTableIndex].rows[rowIndex]], {
+            [colIndex]: payload
+          })
+        })
       };
 
       const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex, updateHistory: false });

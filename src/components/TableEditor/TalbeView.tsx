@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -10,24 +10,25 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { RenderTableDataInterface } from './TableContainer';
 import Row from './Row';
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles({
   tableContainer: {
-    marginTop: 70,
     flex: 1,
-    display: 'block',
+    display: 'flex',
     overflow: 'hidden',
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 105
-    }
+    minHeight: '100vh'
   },
   table: {
     width: '100%',
     height: '100%'
   },
   tableBody: {
-    width: '100%'
+    width: '100%',
+    height: '100%'
+  },
+  list: {
+    minHeight: '90vh'
   }
-}));
+});
 
 interface TableViewPropsInterface {
   data: RenderTableDataInterface
@@ -41,48 +42,51 @@ const TableView: React.FunctionComponent<TableViewPropsInterface> = props => {
 
   const classes = useStyles();
 
+  const [listRefState, setListRef] = React.useState<any | null>(null);
+
   const getRowsHeigth = (index: number):number => rowsMaxHeight[index] + 50
 
+  const listRefHandler = (ref: any) => {
+    setListRef(ref);
+  }
+
+  // Reset table(rows, cells) sizes when data is changed
+  React.useMemo(() => {
+    if (listRefState !== null) {
+      listRefState.resetAfterIndex(0);
+    }
+  }, [data]);
+
   return (
-    <TableContainer 
-      className={classes.tableContainer} 
-      component={Paper}
-    >
-      <Table component='div' className={classes.table}>
-        <TableBody component='div' className={classes.tableBody}>
-          <AutoSizer>
-            {({ height, width }) => (
+    <AutoSizer>
+      {({ height, width }) => {
+        const adjustedHeight = height * 8.25;
+        return <TableContainer 
+          className={classes.tableContainer} 
+          component={Paper}
+          style={{ width, height: height }}
+        >
+          <Table component='div' className={classes.table}>
+            <TableBody component='div' className={classes.tableBody}>
               <List
                 width={width}
-                height={height}
+                height={adjustedHeight}
                 itemCount={rowsAmount}
                 itemSize={getRowsHeigth}
                 itemData={data}
+                ref={listRefHandler}
+                className={classes.list}
+                overscanCount={5}
                 style={{overflow: 'scroll'}}
               >
                 {({style, data, index}) => <Row styleData={style} data={data} rowIndex={index} />}
               </List>
-            )}
-          </AutoSizer>
-        </TableBody>
-      </Table>
-    </TableContainer>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      }}
+    </AutoSizer>
   );
 }
 
 export default TableView;
-
-{/* <Measure 
-  key={i}
-  bounds
-  onResize={(contentRect) => getRowsHeight(i, contentRect.bounds)}
->
-  {({ measureRef }) => (
-    <TableRow 
-      component='div'
-      ref={measureRef}
-    >
-      {row.map((cell, j) => <Cell key={j} data={cell} />)}
-    </TableRow>
-  )}
-</Measure> */}

@@ -33,7 +33,11 @@ const Row: React.FunctionComponent<RowPropsInterface> = props => {
   const rowData = rows[rowIndex];
 
   return (
-    <TableRow component='div' className={classes.row} style={styleData}>
+    <TableRow 
+      component='div' 
+      className={classes.row} 
+      style={styleData}
+    >
       {rowData.map((cellData, cellIndex) =>(
         <Cell key={rowIndex + cellIndex} data={cellData} cellWidth={colsMaxWidth[cellIndex]} cellHeight={rowsMaxHeight[rowIndex]} />
       ))}

@@ -22,7 +22,8 @@ const useStyles = makeStyles({
     position: 'relative',
     minWidth: 100,
     minHeight: 50,
-    display: 'block',
+    display: 'flex',
+    alignItems: 'center',
     flexGrow: 0,
     flexShrink: 0,
     border: '1px solid rgba(224, 224, 224, 1)',
@@ -46,7 +47,7 @@ const Cell: React.FunctionComponent<ReduxProps & CellPropsInterface> = props => 
 
   const classes = useStyles();
 
-  const [displayTools, setDisplayTools] = React.useState<boolean>(false);
+  const [displayToolsState, setDisplayTools] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (editModeIndex !== null && (editModeIndex.rowIndex === rowIndex && editModeIndex.colIndex === colIndex)) {
@@ -68,18 +69,19 @@ const Cell: React.FunctionComponent<ReduxProps & CellPropsInterface> = props => 
         classes.column,
         cellWidth && classes.expandingCell
       )}
+      // For optimization purposes, edit btns displayed only when user hovers or touch cell
+      // Also material ui tooltip doesn't support css display: none, so we have to change
+      // display state with js manually
+      // Mobile events
       onTouchStart={() => setDisplayTools(true)}
       onTouchCancel={() => setDisplayTools(false)}
+      // Desktop events
       onMouseEnter={() => setDisplayTools(true)}
       onMouseLeave={() => setDisplayTools(false)}
     >
       {value}
-      {displayTools ? 
-        <React.Fragment>
-          <TableEditMenu cellData={data} />
-          <CellEditModal cellData={data} setDisplayTools={setDisplayTools} />
-        </React.Fragment> : null
-      }
+      <CellEditModal cellData={data} displayToolsState={displayToolsState} />
+      {displayToolsState ? <TableEditMenu cellData={data} /> : null}
     </TableCell>
   );
 };

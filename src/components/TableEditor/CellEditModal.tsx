@@ -56,7 +56,7 @@ const DraggableComponent: React.FunctionComponent = props => {
 
 interface OtherPropsInterface {
  cellData: CellModel;
- setDisplayTools: React.SetStateAction<any>;
+ displayToolsState: boolean;
 }
 
 type ReduxProps = ConnectedProps<typeof connectToRedux>;
@@ -65,7 +65,7 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
 
   const { 
     cellData, setEditModeAction, 
-    setEditModalLoaderAcion, setDisplayTools
+    setEditModalLoaderAcion, displayToolsState
   } = props;
 
   const { editMode, rowIndex, colIndex } = cellData;
@@ -119,7 +119,6 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
 
   // If user don't want to update table, old data should be passed
   const setEditModeOffHandler = (saveData?: boolean): void => {
-    setDisplayTools(false);
     if(localCellDataState !== null && editMode === CellEditModeEnum.EDIT_MODE_ON && saveData) {
       setEditModeAction({
         ...cellData,
@@ -134,17 +133,20 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
 
   return (
     <React.Fragment>
-      <Tooltip title='Edit Cell' arrow>
-        <IconButton
-          className={classes.openModalBtn}
-          onClick={setEditModeOnHandler}
-        >
-          <EditIcon fontSize='small' />
-        </IconButton>
-      </Tooltip>
+      {displayToolsState ? 
+        <Tooltip title='Edit Cell' arrow>
+          <IconButton
+            className={classes.openModalBtn}
+            onClick={setEditModeOnHandler}
+          >
+            <EditIcon fontSize='small' />
+          </IconButton>
+        </Tooltip> : null
+      }
+      {editMode === CellEditModeEnum.EDIT_MODE_ON ?
         <Dialog
           fullScreen={isMounted ? window.screen.width < 600 : false}
-          open={editMode === CellEditModeEnum.EDIT_MODE_ON}
+          open={true}
           onClose={() => setEditModeOffHandler()}
           PaperComponent={isMounted && window.screen.width < 600 ? Paper : DraggableComponent}
           aria-labelledby='draggable-dialog-title'
@@ -265,6 +267,9 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
             </Button>
           </DialogActions>
         </Dialog>
+          :
+        null
+      }
     </React.Fragment>
   );
 }

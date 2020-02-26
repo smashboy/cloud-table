@@ -20,7 +20,7 @@ const TableContainer: React.FunctionComponent<Props> = props => {
   const [renderDataState, setRenderData] = React.useState<RenderTableDataInterface | null>(null);
 
   React.useEffect(() => {
-    generateTableAction({ rowsAmount: 5, colsAmount: 5 });
+    generateTableAction({ rowsAmount: 10, colsAmount: 20 });
   }, []);
 
   React.useEffect(() => {

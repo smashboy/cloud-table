@@ -15,9 +15,6 @@ const initialState: TableHistoryStateInterface = {
 
   currentTableIndex: 0,
 
-  // Index of editModal that should appear
-  editModeIndex: null,
-
   history: [],
 }
 
@@ -102,7 +99,7 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
       };
 
       const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex, updateHistory: false });
-      return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex, editModeIndex: { rowIndex, colIndex } };
+      return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
     case TableEnum.SET_EDIT_MODE_OFF: {
       const { rowIndex, colIndex, value, valueColor, cellColor } = payload;
@@ -127,7 +124,7 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
       };
 
       const { updatedCurrentTableIndex, updatedTableHistory } = tableHistoryManager({ tableData, history, historyLimit, currentTableIndex, updateHistory: shouldUpdateHistory });
-      return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex, editModeIndex: null };
+      return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
     case TableEnum.CLEAR_ALL_CELLS: {
       const tableData: TableModel = {

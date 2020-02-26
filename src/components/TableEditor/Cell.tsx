@@ -1,20 +1,12 @@
   
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { connect, ConnectedProps } from 'react-redux';
 import TableCell from '@material-ui/core/TableCell';
 import clsx from 'clsx';
 
 import CellModel from '../../../models/Table/Cell';
 import CellEditModal from './CellEditModal';
 import TableEditMenu from './TableEditMenu';
-import { storeStateType } from '../../redux/store';
-
-interface CellPropsInterface {
-  data: CellModel;
-  cellWidth: number;
-  cellHeight: number;
-}
 
 const useStyles = makeStyles({
   cell: {
@@ -38,22 +30,20 @@ const useStyles = makeStyles({
   }
 });
 
-type ReduxProps = ConnectedProps<typeof connectToRedux>;
+interface CellPropsInterface {
+  data: CellModel;
+  cellWidth: number;
+  cellHeight: number;
+}
 
-const Cell: React.FunctionComponent<ReduxProps & CellPropsInterface> = props => {
+const Cell: React.FunctionComponent<CellPropsInterface> = props => {
 
-  const { data, editModeIndex, cellWidth, cellHeight } = props;
-  const { value, cellColor, valueColor, rowIndex, colIndex } = data;
+  const { data, cellWidth, cellHeight } = props;
+  const { value, cellColor, valueColor } = data;
 
   const classes = useStyles();
 
   const [displayToolsState, setDisplayTools] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    if (editModeIndex !== null && (editModeIndex.rowIndex === rowIndex && editModeIndex.colIndex === colIndex)) {
-      setDisplayTools(true);
-    }
-  });
 
   return (
     <TableCell
@@ -86,10 +76,4 @@ const Cell: React.FunctionComponent<ReduxProps & CellPropsInterface> = props => 
   );
 };
 
-const mapStateToProps = (state: storeStateType) => ({
-  editModeIndex: state.editor.editModeIndex
-});
-
-const connectToRedux = connect(mapStateToProps);
-
-export default connectToRedux(Cell);
+export default Cell;

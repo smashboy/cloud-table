@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -10,25 +10,20 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { RenderTableDataInterface } from './TableContainer';
 import Row from './Row';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => createStyles({
   tableContainer: {
     flex: 1,
     display: 'flex',
-    overflow: 'hidden',
-    minHeight: '100vh'
+    overflow: 'hidden'
   },
-  table: {
-    width: '100%',
-    height: '100%'
-  },
-  tableBody: {
-    width: '100%',
-    height: '100%'
-  },
-  list: {
-    minHeight: '90vh'
+  rootContainer: {
+    flex: '1 1 auto', 
+    height: '90.8vh',
+    [theme.breakpoints.down('xs')]: {
+      height: '87.2vh'
+    }
   }
-});
+}));
 
 interface TableViewPropsInterface {
   data: RenderTableDataInterface
@@ -58,34 +53,36 @@ const TableView: React.FunctionComponent<TableViewPropsInterface> = props => {
   }, [data]);
 
   return (
-    <AutoSizer>
-      {({ height, width }) => {
-        const adjustedHeight = height * 8.25;
-        return <TableContainer 
-          className={classes.tableContainer} 
-          component={Paper}
-          style={{ width, height: height }}
-        >
-          <Table component='div' className={classes.table}>
-            <TableBody component='div' className={classes.tableBody}>
-              <List
-                width={width}
-                height={adjustedHeight}
-                itemCount={rowsAmount}
-                itemSize={getRowsHeigth}
-                itemData={data}
-                ref={listRefHandler}
-                className={classes.list}
-                overscanCount={5}
-                style={{overflow: 'scroll'}}
-              >
-                {({style, data, index}) => <Row styleData={style} data={data} rowIndex={index} />}
-              </List>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      }}
-    </AutoSizer>
+    <div style={{ display: 'flex' }}>
+      <div className={classes.rootContainer}>
+        <AutoSizer>
+          {({ height, width }) => (
+            <TableContainer 
+              className={classes.tableContainer} 
+              component={Paper}
+              style={{ width, height }}
+            >
+              <Table component='div'>
+                <TableBody component='div'>
+                  <List
+                    width={width}
+                    height={height}
+                    itemCount={rowsAmount}
+                    itemSize={getRowsHeigth}
+                    itemData={data}
+                    ref={listRefHandler}
+                    overscanCount={5}
+                    style={{overflow: 'scroll'}}
+                  >
+                    {({style, data, index}) => <Row styleData={style} data={data} rowIndex={index} />}
+                  </List>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </AutoSizer>
+      </div>
+    </div>
   );
 }
 

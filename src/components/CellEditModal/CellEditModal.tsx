@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles, Theme, createStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Button from '@material-ui/core/Button';
@@ -15,13 +15,29 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { CompactPicker } from 'react-color';
 import Menu from '@material-ui/core/Menu';
+import Divider from '@material-ui/core/Divider';
+import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
+import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
+import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
+import FormatAlignJustifyIcon from '@material-ui/icons/FormatAlignJustify';
+import FormatBoldIcon from '@material-ui/icons/FormatBold';
+import FormatItalicIcon from '@material-ui/icons/FormatItalic';
+import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
+import FormatColorFillIcon from '@material-ui/icons/FormatColorFill';
+import FormatTextColorIcon from '@material-ui/icons/FormatColorText';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import FormatVerticalTop from '@material-ui/icons/VerticalAlignTop';
+import FormatVerticalCenter from '@material-ui/icons/VerticalAlignCenter';
+import FormatVerticalBottom from '@material-ui/icons/VerticalAlignBottom';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 
 import CellModel, { CellEditModeEnum } from '../../../models/Table/Cell';
 import setEditModeAction from '../../redux/actions/editorActions/setEditModeAction';
 import setEditModalLoaderAcion from '../../redux/actions/editorActions/setEditModalLoaderAction';
 import useMounted from '../../customHooks/useMounted';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme: Theme) => createStyles({
   title: {
     textAlign: 'center',
     cursor: 'move'
@@ -40,11 +56,30 @@ const useStyles = makeStyles({
     borderRadius: '50%',
     border: '1px solid #bfbfbf'
   },
-  colorSelectorMenu: {
+  menu: {
     boxShadow: 'none',
     backgroundColor: 'transparent'
+  },
+  paper: {
+    display: 'flex',
+    border: `1px solid ${theme.palette.divider}`,
+    flexWrap: 'wrap',
+  },
+  btnGroup: {
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      justifyContent: 'center'
+    }
+  },
+  divider: {
+    alignSelf: 'stretch',
+    height: 'auto',
+    margin: theme.spacing(1, 0.5),
+    [theme.breakpoints.down('xs')]: {
+      display: 'none'
+    }
   }
-});
+}));
 
 const DraggableComponent: React.FunctionComponent = props => {
   return (
@@ -74,6 +109,8 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
   const isMounted = useMounted();
 
   const [localCellDataState, setLocalCellData] = React.useState<CellModel | null>(null);
+  const [verticalAlignMenuState, setVerticalAlignMenu] = React.useState<HTMLElement | null>(null);
+  const [horizontalAlignMenuState, setHorizontalAlignMenu] = React.useState<HTMLElement | null>(null);
   const [valueColorMenuState, setValueColorMenu] = React.useState<HTMLElement | null>(null);
   const [cellColorMenuState, setCellColorMenu] = React.useState<HTMLElement | null>(null);
 
@@ -157,6 +194,42 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
             Edit Cell
           </DialogTitle>
           <DialogContent>
+            <Paper elevation={0} className={classes.paper}>
+              <IconButton
+                aria-controls={`change-vertical-align-color-menu-${rowIndex}-${colIndex}`}
+                aria-haspopup='true'
+                onClick={(event: React.MouseEvent<HTMLButtonElement>) => setVerticalAlignMenu(event.currentTarget)}
+              >
+                <FormatAlignLeftIcon />
+              </IconButton>
+              <Menu
+                id={`change-vertical-align-color-menu-${rowIndex}-${colIndex}`}
+                anchorEl={verticalAlignMenuState}
+                keepMounted
+                className={classes.menu}
+                open={Boolean(verticalAlignMenuState)}
+                classes={{
+                  paper: classes.menu
+                }}
+                onClose={() => setVerticalAlignMenu(null)}
+              >
+                <StyledToggleButtonGroup
+                  size='small'
+                  className={classes.btnGroup}
+                  aria-label='text-vertical-formatting'
+                >
+                  <ToggleButton value='top' aria-label='top-aligned'>
+                    <FormatVerticalTop />
+                  </ToggleButton>
+                  <ToggleButton value='center' aria-label='center-aligned'>
+                    <FormatVerticalCenter />
+                  </ToggleButton>
+                  <ToggleButton value='bottom' aria-label='bottom-aligned'>
+                    <FormatVerticalBottom />
+                  </ToggleButton>
+                </StyledToggleButtonGroup>
+              </Menu>
+            </Paper>
             <TextField 
               label='Cell Value'
               type='text'
@@ -200,10 +273,10 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
               id={`change-text-color-menu-${rowIndex}-${colIndex}`}
               anchorEl={valueColorMenuState}
               keepMounted
-              className={classes.colorSelectorMenu}
+              className={classes.menu}
               open={Boolean(valueColorMenuState)}
               classes={{
-                paper: classes.colorSelectorMenu
+                paper: classes.menu
               }}
               onClose={() => setValueColorMenu(null)}
             >
@@ -240,7 +313,7 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
               anchorEl={cellColorMenuState}
               keepMounted
               classes={{
-                paper: classes.colorSelectorMenu
+                paper: classes.menu
               }}
               open={Boolean(cellColorMenuState)}
               onClose={() => setCellColorMenu(null)}

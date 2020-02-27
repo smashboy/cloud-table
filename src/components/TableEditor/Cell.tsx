@@ -5,7 +5,7 @@ import TableCell from '@material-ui/core/TableCell';
 import clsx from 'clsx';
 
 import CellModel from '../../../models/Table/Cell';
-import CellEditModal from './CellEditModal';
+import CellEditModal from '../CellEditModal/CellEditModal';
 import TableEditMenu from './TableEditMenu';
 
 const useStyles = makeStyles({

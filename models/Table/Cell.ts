@@ -3,7 +3,10 @@ export default class Cell {
   colIndex!: number;
   value!: string;
   valueColor!: string;
+  valueFormat!: ValueFormatEnum[];
   cellColor!: string;
+  horizontalAlign!: HorizontalAlignEnum;
+  verticalAlign!: VerticalAlignEnum;
   editMode!: CellEditModeEnum;
 
   public constructor(init?: Partial<Cell>) {
@@ -11,4 +14,10 @@ export default class Cell {
   }
 }
 
-export enum CellEditModeEnum { EDIT_MODE_OFF, EDIT_MODE_ON, EDIT_MODE_REMOTE };
+export enum ValueFormatEnum { BOLD, ITALIC, UNDERLINE }
+
+export enum HorizontalAlignEnum { LEFT = 'flex-start', CENTER = 'center', RIGHT = 'flex-end' }
+
+export enum VerticalAlignEnum { TOP = 'flex-start', MIDDLE = 'center', BOTTOM = 'flex-end' }
+
+export enum CellEditModeEnum { EDIT_MODE_OFF, EDIT_MODE_ON, EDIT_MODE_REMOTE }

@@ -2,6 +2,7 @@ import { TableEnum } from '../enums';
 import { TableHistoryStateInterface } from '../interfaces';
 import TableModel from '../../../models/Table/Table';
 import CellModel, { CellEditModeEnum } from '../../../models/Table/Cell';
+import generateDefaultCell from '../../utils/generateDefaultCell';
 
 const initialState: TableHistoryStateInterface = {
 
@@ -102,7 +103,11 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
       return { ...state, history: updatedTableHistory, currentTableIndex: updatedCurrentTableIndex };
     }
     case TableEnum.SET_EDIT_MODE_OFF: {
-      const { rowIndex, colIndex, value, valueColor, cellColor } = payload;
+      const { 
+        rowIndex, colIndex, value, 
+        valueColor, cellColor, horizontalAlign,
+        verticalAlign, valueFormat
+      } = payload;
       const oldData = history[currentTableIndex].rows[rowIndex][colIndex];
 
       // If no data has been changed, history should not be updated !!!
@@ -112,6 +117,12 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
         oldData.valueColor !== valueColor
           ||
         oldData.cellColor !== cellColor
+          ||
+        oldData.horizontalAlign !== horizontalAlign
+          ||
+        oldData.verticalAlign !== verticalAlign
+          ||
+        oldData.valueFormat.length !== valueFormat.length
       );
 
       const tableData: TableModel = {
@@ -160,14 +171,10 @@ export default (state: TableHistoryStateInterface = initialState, { type, payloa
         colsAmount: history[currentTableIndex].colsAmount + 1,
         rows: history[currentTableIndex].rows.map((row: CellModel[], rowIndex: number) => [
           ...row.slice(0, payload),
-          {
-            rowIndex: rowIndex,
-            colIndex: payload,
-            value: '',
-            editMode: 0,
-            valueColor: '#000000',
-            cellColor: '#ffffff'
-          },
+          generateDefaultCell({
+            rowIndex,
+            colIndex: payload
+          }),
           // Same thing, but with colIndex
           ...row.slice(payload).map((cell: CellModel) => ({...cell, colIndex: cell.colIndex + 1}))
         ])

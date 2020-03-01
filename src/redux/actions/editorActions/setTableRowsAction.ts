@@ -1,6 +1,7 @@
 import { TableEnum } from '../../enums';
-import CellModel, { CellEditModeEnum } from '../../../../models/Table/Cell';
+import CellModel from '../../../../models/Table/Cell';
 import { SetTableRowsActionType } from '../../types';
+import generateDefaultCell from '../../../utils/generateDefaultCell';
 
 const setTableRowsAction: SetTableRowsActionType = ({ rowIndex, shouldDelete = false }) => (dispatch, getState) => {
 
@@ -24,14 +25,10 @@ const setTableRowsAction: SetTableRowsActionType = ({ rowIndex, shouldDelete = f
   }
 
   for (let i = 0; i < colsAmount; i++) {
-    newRow.push({
-      rowIndex: rowIndex,
-      colIndex: i,
-      value: '',
-      editMode: CellEditModeEnum.EDIT_MODE_OFF,
-      valueColor: '#000000',
-      cellColor: '#ffffff'
-    });
+    newRow.push(generateDefaultCell({
+      rowIndex,
+      colIndex: i
+    }));
   }
 
   dispatch({

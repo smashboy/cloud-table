@@ -51,8 +51,8 @@ const GenerateTableForm: React.FunctionComponent<Props> = props => {
   // because we don't use inputs data outside this component
   // if data is not valid
   const [inputState, setInput] = React.useState<GenerateTableFormInterface>({
-    rowsInput: 5,
-    colsInput: 5
+    rowsInput: 20,
+    colsInput: 20
   });
   const [modalState, setModal] = React.useState<boolean>(false);
 

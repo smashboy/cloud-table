@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import clsx from 'clsx';
 
-import CellModel from '../../../models/Table/Cell';
-import CellEditModal from '../CellEditModal/CellEditModal';
+import CellModel, { ValueFormatEnum } from '../../../models/Table/Cell';
+import CellEditModal from './CellEditModal';
 import TableEditMenu from './TableEditMenu';
 
 const useStyles = makeStyles({
@@ -13,7 +13,6 @@ const useStyles = makeStyles({
     cursor: 'pointer',
     position: 'relative',
     display: 'flex',
-    alignItems: 'center',
     flexGrow: 0,
     flexShrink: 0,
     height: '100%',
@@ -38,7 +37,7 @@ interface CellPropsInterface {
 const Cell: React.FunctionComponent<CellPropsInterface> = props => {
 
   const { data, cellWidth } = props;
-  const { value, cellColor, valueColor } = data;
+  const { value, cellColor, valueColor, horizontalAlign, verticalAlign, valueFormat } = data;
 
   const classes = useStyles();
 
@@ -51,7 +50,12 @@ const Cell: React.FunctionComponent<CellPropsInterface> = props => {
         backgroundColor: cellColor,
         color: valueColor,
         // flexBasis: cellWidth > 0 ? Math.round(cellWidth + 100) : 100,
-        minWidth: cellWidth > 0 ? Math.round(cellWidth + 100) : 100
+        minWidth: cellWidth > 0 ? Math.round(cellWidth + 100) : 100,
+        justifyContent: horizontalAlign,
+        alignItems: verticalAlign,
+        fontWeight: valueFormat.includes(ValueFormatEnum.BOLD) ? 'bold' : 'normal',
+        textDecoration: valueFormat.includes(ValueFormatEnum.UNDERLINE) ? 'underline' : 'none',
+        fontStyle: valueFormat.includes(ValueFormatEnum.ITALIC) ? 'italic' : 'normal'
       }}
       className={clsx(
         classes.cell,

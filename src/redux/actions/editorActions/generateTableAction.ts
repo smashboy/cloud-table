@@ -1,8 +1,8 @@
 import { TableEnum, ErrorKeysEnum, UiEnum } from '../../enums';
 
-import { CellEditModeEnum } from '../../../../models/Table/Cell';
 import { GenerateTableActionType } from '../../types';
 import CellModel from '../../../../models/Table/Cell';
+import generateDefaultCell from '../../../utils/generateDefaultCell';
 
 /**
  * Generate table action is used to validate table data or create new table structure with or without specified data 
@@ -77,14 +77,11 @@ const generateTableAction: GenerateTableActionType = ({ rowsAmount, colsAmount, 
     for (let i = 0; i < rowsAmount; i++) {
       rows.push([]);
       for (let j = 0; j < colsAmount; j++) {
-        rows[i].push({
+        rows[i].push(generateDefaultCell({
           rowIndex: i,
           colIndex: j,
           value: data.length > 0 ? data[i][j].replace('Â', '') : '', // Didn't find better fix for Â symbol then just replacing it,
-          editMode: CellEditModeEnum.EDIT_MODE_OFF,
-          valueColor: '#000000',
-          cellColor: '#ffffff'
-        });
+        }));
       }
     }
 

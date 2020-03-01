@@ -38,7 +38,7 @@ const Row: React.FunctionComponent<RowPropsInterface> = props => {
       className={classes.row} 
       style={styleData}
     >
-      {rowData.map((cellData, cellIndex) =>(
+      {rowData.map((cellData, cellIndex) => (
         <Cell key={rowIndex + cellIndex} data={cellData} cellWidth={colsMaxWidth[cellIndex]} />
       ))}
     </TableRow>

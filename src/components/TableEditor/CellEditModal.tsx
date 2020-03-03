@@ -51,12 +51,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     padding: 0,
     bottom: 2,
   },
-  inputColorIndicator: {
-    minWidth: 30,
-    minHeight: 30,
-    borderRadius: '50%',
-    border: '1px solid #bfbfbf'
-  },
   menu: {
     boxShadow: 'none',
     backgroundColor: 'transparent'
@@ -74,6 +68,16 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
       borderRadius: 4
     }
   },
+  valueColorSelectorIcon: (props: StylePropsInterface) => ({
+    '& path:first-child': {
+      color: props.valueColor
+    }
+  }),
+  cellColorSelectorIcon : (props: StylePropsInterface) => ({
+    '& path:last-child': {
+      color: props.cellColor
+    }
+  }),
   divider: {
     alignSelf: 'stretch',
     height: 'auto',
@@ -116,6 +120,11 @@ interface OtherPropsInterface {
  displayToolsState: boolean;
 }
 
+interface StylePropsInterface {
+  cellColor: string;
+  valueColor: string;
+}
+
 type ReduxProps = ConnectedProps<typeof connectToRedux>;
 
 const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> = (props) => {
@@ -127,14 +136,19 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
 
   const { editMode, rowIndex, colIndex } = cellData;
 
-  const classes = useStyles();
-  const isMounted = useMounted();
-
   const [localCellDataState, setLocalCellData] = React.useState<CellModel | null>(null);
   const [verticalAlignMenuState, setVerticalAlignMenu] = React.useState<HTMLElement | null>(null);
   const [horizontalAlignMenuState, setHorizontalAlignMenu] = React.useState<HTMLElement | null>(null);
   const [valueColorMenuState, setValueColorMenu] = React.useState<HTMLElement | null>(null);
   const [cellColorMenuState, setCellColorMenu] = React.useState<HTMLElement | null>(null);
+
+  const colorIndicatorProps: StylePropsInterface = {
+    cellColor: localCellDataState === null ? '#ffffff' : localCellDataState.cellColor,
+    valueColor: localCellDataState === null ? '#000000' : localCellDataState.valueColor
+  } 
+
+  const classes = useStyles(colorIndicatorProps);
+  const isMounted = useMounted();
 
   // SET local state data, when edit mode is turned on in redux store
   React.useEffect(() => {
@@ -245,7 +259,7 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
               <Tooltip title='Horizontal align' arrow>
                 <Button
                   variant='text'
-                  aria-controls={`change-horizontal-align-color-menu-${rowIndex}-${colIndex}`}
+                  aria-controls={`change-horizontal-align-menu-${rowIndex}-${colIndex}`}
                   aria-haspopup='true'
                   className={classes.dropdownBtn}
                   onClick={(event: React.MouseEvent<HTMLButtonElement>) => setHorizontalAlignMenu(event.currentTarget)}
@@ -260,7 +274,7 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
                 </Button>
               </Tooltip>
               <Menu
-                id={`change-horizontal-align-color-menu-${rowIndex}-${colIndex}`}
+                id={`change-horizontal-align-menu-${rowIndex}-${colIndex}`}
                 anchorEl={horizontalAlignMenuState}
                 keepMounted
                 open={Boolean(horizontalAlignMenuState)}
@@ -325,7 +339,7 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
               <Tooltip title='Vertical align' arrow>
                 <Button
                   variant='text'
-                  aria-controls={`change-vertical-align-color-menu-${rowIndex}-${colIndex}`}
+                  aria-controls={`change-vertical-align-menu-${rowIndex}-${colIndex}`}
                   aria-haspopup='true'
                   className={classes.dropdownBtn}
                   onClick={(event: React.MouseEvent<HTMLButtonElement>) => setVerticalAlignMenu(event.currentTarget)}
@@ -340,7 +354,7 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
                 </Button>
               </Tooltip>
               <Menu
-                id={`change-vertical-align-color-menu-${rowIndex}-${colIndex}`}
+                id={`change-vertical-align-menu-${rowIndex}-${colIndex}`}
                 anchorEl={verticalAlignMenuState}
                 keepMounted
                 open={Boolean(verticalAlignMenuState)}
@@ -463,11 +477,10 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
                   aria-haspopup='true'
                   className={classes.dropdownBtn}
                   onClick={(event: React.MouseEvent<HTMLButtonElement>) => setCellColorMenu(event.currentTarget)}
-                  style={{
-                    color: localCellDataState === null ? '#000000' : localCellDataState.cellColor
-                  }}
                 >
-                  <FormatColorFillIcon />
+                  <FormatColorFillIcon
+                    className={classes.cellColorSelectorIcon}
+                  />
                   <ArrowDropDownIcon />
                 </Button>
               </Tooltip>
@@ -491,11 +504,8 @@ const CellEditModal: React.FunctionComponent<ReduxProps & OtherPropsInterface> =
                   aria-haspopup='true'
                   className={classes.dropdownBtn}
                   onClick={(event: React.MouseEvent<HTMLButtonElement>) => setValueColorMenu(event.currentTarget)}
-                  style={{
-                    color: localCellDataState === null ? '#000000' : localCellDataState.valueColor
-                  }}
                 >
-                  <FormatTextColorIcon />
+                  <FormatTextColorIcon className={classes.valueColorSelectorIcon} />
                   <ArrowDropDownIcon />
                 </Button>
               </Tooltip>

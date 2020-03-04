@@ -26,18 +26,11 @@ const index: React.FunctionComponent<ReduxProps> = props => {
 
   return (
     <React.Fragment>
-      <style global jsx>{`
-        body {
-          overflow: hidden;
-        }
-      `}</style>
       <Backdrop open={loading.includes(LoadingKeysEnum.CELL_EDIT_MODAL_LOADING)} className={classes.cellEditModalLoaderContainer}>
         <CircularProgress color='inherit' />
       </Backdrop>
-      {/* <div className={classes.tableEditorPageContainer}> */}
-        <TableEditorToolbar />
-        <TableContainer />
-      {/* </div> */}
+      <TableEditorToolbar />
+      <TableContainer />
     </React.Fragment>
   );
 }

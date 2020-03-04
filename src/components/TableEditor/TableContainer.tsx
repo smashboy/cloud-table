@@ -8,7 +8,8 @@ import TableView from './TalbeView';
 
 export interface RenderTableDataInterface extends TableModel {
   colsMaxWidth: number[],
-  rowsMaxHeight: number[]
+  rowsMaxHeight: number[],
+  colsId: string[]
 }
 
 type Props = ConnectedProps<typeof connectToRedux>;
@@ -25,7 +26,7 @@ const TableContainer: React.FunctionComponent<Props> = props => {
 
   React.useEffect(() => {
     if (tableHistory.length > 0) {
-      getTableMaxDimensions(tableHistory[currentTableIndex]);
+      prepareDataForRender(tableHistory[currentTableIndex]);
     }
   }, [tableHistory, currentTableIndex]);
 
@@ -35,7 +36,7 @@ const TableContainer: React.FunctionComponent<Props> = props => {
    * @param tableObject
    * RenderTableDataInterface
    */
-  const getTableMaxDimensions = ({ rows, ...other }: TableModel): void => {
+  const prepareDataForRender = ({ rows, colsAmount, ...other }: TableModel): void => {
     const tableDataLengths: number[][] = [];
 
     // Getting each cell value length
@@ -71,10 +72,24 @@ const TableContainer: React.FunctionComponent<Props> = props => {
     // Same for rows heights, but much simpler
     const rowsMaxHeight = tableDataLengths.map((row: number[]) => (Math.max.apply(Math, row)));
 
+    const generateColsId = (colsAmount: number): string[] => {
+      const colsId = [];
+      const j = 'Z'.charCodeAt(0);
+      let i = 'A'.charCodeAt(0);
+
+      // Generate alphabet
+      for (; i <= j; ++i) {
+        colsId.push(String.fromCharCode(i));
+      }
+      return colsId.slice(0, colsAmount);
+    }
+
     setRenderData({
       colsMaxWidth,
       rowsMaxHeight,
       rows,
+      colsAmount,
+      colsId: generateColsId(colsAmount),
       ...other
     });
   }
